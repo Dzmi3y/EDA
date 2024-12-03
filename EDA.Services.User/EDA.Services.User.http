@@ -1,6 +1,0 @@
-@EDA.Services.User_HostAddress = http://localhost:5289
-
-GET {{EDA.Services.User_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
