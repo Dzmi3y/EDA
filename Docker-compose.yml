@@ -13,6 +13,12 @@ services:
       dockerfile: ./eda.client/Dockerfile
     ports:
       - "82:80"
+  eda_pictures:
+    container_name: pictures
+    build:
+      dockerfile: ./EDA.Pictures/Dockerfile
+    ports:
+      - "83:80"
 # Kafka
   eda_zookeeper:
     image: confluentinc/cp-zookeeper:7.2.1
@@ -54,7 +60,7 @@ services:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
-      - 8083:8080
+      - 8084:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: true
 # DB
