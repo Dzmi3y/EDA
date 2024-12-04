@@ -82,9 +82,21 @@ services:
       ports:
         - "5433:5432"
       restart: always
+  eda_mongo: 
+    image: mongo:latest 
+    container_name: mongo-catalog
+    restart: always 
+    environment: 
+        MONGO_INITDB_ROOT_USERNAME: mongouser 
+        MONGO_INITDB_ROOT_PASSWORD: p@ssw0rd 
+    volumes: 
+        - mongo-data:/data/db 
+    ports: 
+        - "27017:27017"
 volumes: 
   zookeeper-data: 
   zookeeper-log: 
   kafka-data:
   postgres-user-data-db:
-  postgres-order-data-db:  
+  postgres-order-data-db:
+  mongo-data:
