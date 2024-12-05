@@ -1,27 +1,25 @@
 ﻿using Confluent.Kafka;
-using Microsoft.Extensions.Options;
+using EDA.Shared.Kafka.Enums;
+using EDA.Shared.Kafka.Messages.Base;
+using Newtonsoft.Json;
 
 namespace EDA.Shared.Kafka.Producer
 {
-    public class KafkaProducer<Tk, Tv> : IDisposable
+    public class KafkaProducer : IKafkaProducer
     {
-        private readonly IProducer<Tk, Tv> _producer;
-        private readonly string _topic;
+        private readonly IProducer<Null, string> _producer;
 
-        public KafkaProducer(IOptions<KafkaProducerConfig<Tk, Tv>> topicOptions, IProducer<Tk, Tv> producer)
+        public KafkaProducer(ProducerConfig config)
         {
-            _topic = topicOptions.Value.Topic;
-            _producer = producer;
+            _producer = new ProducerBuilder<Null, string>(config).Build();
         }
 
-        public async Task ProduceAsync(Tk key, Tv value)
+        public async Task SendMessageAsync(Topics topic, MessageBase message)
         {
-            await _producer.ProduceAsync(_topic, new Message<Tk, Tv> { Key = key, Value = value });
-        }
-
-        public void Dispose()
-        {
-            _producer.Dispose();
+            string jsonString = JsonConvert.SerializeObject(message, Formatting.Indented);
+            var msg = new Message<Null, string> { Value = jsonString };
+            await _producer.ProduceAsync(topic.ToStringRepresentation(), msg);
         }
     }
+
 }

@@ -1,4 +1,4 @@
-﻿namespace EDA.Services.Сatalog.Data
+﻿namespace EDA.Shared.Data
 {
     public class Product
     {

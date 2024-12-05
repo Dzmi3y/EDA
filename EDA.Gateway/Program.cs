@@ -1,11 +1,21 @@
+using Confluent.Kafka;
+using EDA.Shared.Kafka.Producer;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers();
+
+var producerConfig = new ProducerConfig
+{
+    BootstrapServers = "localhost:9092"
+};
+builder.Services.AddSingleton(producerConfig);
+builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 
 var app = builder.Build();
 
