@@ -5,7 +5,7 @@ namespace EDA.Shared.Kafka.Producer
 {
     public interface IKafkaProducer
     {
-        Task SendMessageAsync(Topics topic, MessageBase message);
+        Task SendMessageAsync(Topics topic, Guid key, MessageBase message);
     }
 
 }

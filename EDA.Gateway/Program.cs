@@ -1,4 +1,5 @@
 using Confluent.Kafka;
+using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Producer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,17 @@ var producerConfig = new ProducerConfig
 };
 builder.Services.AddSingleton(producerConfig);
 builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
+
+
+var consumerConfig = new ConsumerConfig
+{
+    GroupId = "gateway-group",
+    BootstrapServers = "localhost:9092",
+    AutoOffsetReset = AutoOffsetReset.Earliest
+};
+builder.Services.AddSingleton(consumerConfig);
+builder.Services.AddSingleton<IKafkaConsumer, KafkaConsumer>();
+//builder.Services.AddHostedService<KafkaConsumer>();
 
 var app = builder.Build();
 

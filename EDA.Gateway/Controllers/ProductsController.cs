@@ -1,4 +1,5 @@
-﻿using EDA.Shared.Kafka.Enums;
+﻿using EDA.Shared.Kafka.Consumer;
+using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages;
 using EDA.Shared.Kafka.Producer;
 using Microsoft.AspNetCore.Mvc;
@@ -9,21 +10,36 @@ namespace EDA.Gateway.Controllers
     [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
-        private IKafkaProducer _producer;
+        private readonly IKafkaProducer _producer;
+        private readonly IKafkaConsumer _consumer;
 
-        public ProductsController(IKafkaProducer producer)
+        public ProductsController(IKafkaProducer producer, IKafkaConsumer consumer)
         {
-            _producer=producer;
+            _producer = producer;
+            _consumer = consumer;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-           await _producer.SendMessageAsync(
-                Topics.Products,new ProductPageRequestMessage(8,2));
-           
+            try
+            {
+                //var key = Guid.NewGuid();
+                
+                Guid.TryParse("f99ad5f7-6bbd-409a-9fc7-f2469e7b69ba", out Guid key);
+                
+                await _producer.SendMessageAsync(
+                    Topics.Products, key, new ProductPageRequestMessage(8, 2));
+                //var cts = new CancellationTokenSource();
+
+                //var result = await _consumer.StartConsuming(cts.Token, Topics.Products, key);
 
 
-            return Ok("Successful");
+                return Ok($"Successful");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
