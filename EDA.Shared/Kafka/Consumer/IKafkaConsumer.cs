@@ -1,10 +1,10 @@
-﻿using EDA.Shared.Kafka.Enums;
+﻿using Confluent.Kafka;
+using EDA.Shared.Kafka.Enums;
 
 namespace EDA.Shared.Kafka.Consumer
 {
     public interface IKafkaConsumer
     {
-        Task<string> StartConsuming(CancellationToken stoppingToken, Topics topic, Guid? key);
+        Task StartConsuming(CancellationToken stoppingToken, Topics topic, Action<ConsumeResult<string, string>>? messageHandler);
     }
-
 }

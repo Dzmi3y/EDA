@@ -8,11 +8,13 @@ namespace EDA.Shared.Kafka.Consumer
     {
         private readonly IConsumer<string, string> _consumer;
         private readonly Topics? _topic;
+        private readonly Action<ConsumeResult<string, string>>? _handler;
 
-        public KafkaConsumer(ConsumerConfig config, Topics? topic = null)
+        public KafkaConsumer(ConsumerConfig config, Action<ConsumeResult<string, string>>? handler = null, Topics? topic = null)
         {
             _consumer = new ConsumerBuilder<string, string>(config).Build();
             _topic = topic;
+            _handler = handler;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -22,11 +24,10 @@ namespace EDA.Shared.Kafka.Consumer
                 throw new ArgumentNullException(nameof(_topic), "Topic cannot be null or empty.");
             }
 
-            await StartConsuming(stoppingToken, (Topics)_topic);
+            await StartConsuming(stoppingToken, (Topics)_topic, _handler);
         }
-        public Task<string> StartConsuming(CancellationToken stoppingToken, Topics topic, Guid? key = null)
+        public async Task StartConsuming(CancellationToken stoppingToken, Topics topic, Action<ConsumeResult<string, string>>? messageHandler)
         {
-            var l = topic.ToStringRepresentation();
             _consumer.Subscribe(topic.ToStringRepresentation());
             try
             {
@@ -34,18 +35,17 @@ namespace EDA.Shared.Kafka.Consumer
                 {
                     var consumeResult = _consumer.Consume(stoppingToken);
 
-                    Console.WriteLine(
-                        $"Consumed message '{consumeResult.Value}' at: '{consumeResult.TopicPartitionOffset}'.");
-                    //return Task.FromResult(consumeResult.Value);
-
+                    _consumer.Consume(stoppingToken);
+                    if (consumeResult != null && messageHandler != null)
+                    {
+                        await Task.Run(() => messageHandler.Invoke(consumeResult), stoppingToken);
+                    }
                 }
             }
             catch (OperationCanceledException)
             {
                 _consumer.Close();
             }
-
-            return Task.FromResult("");
         }
 
         public override void Dispose()
