@@ -1,24 +1,23 @@
-﻿using EDA.Shared.Redis.Enums;
-using EDA.Shared.Redis.Interfaces;
+﻿using EDA.Shared.Redis.Interfaces;
 using StackExchange.Redis;
 
 namespace EDA.Shared.Redis.Services
 {
-    public class RedisService : IRedisService
+    public class RedisStringsService : IRedisService
     {
         private readonly ConnectionMultiplexer _redis;
         private readonly TimeSpan _defaultExpiry;
         private readonly TimeSpan _defaultTimeout;
         private bool _disposed = false;
 
-        public RedisService(string configuration, TimeSpan defaultExpiry, TimeSpan defaultTimeout)
+        public RedisStringsService(RedisConfig redisConfig)
         {
-            _redis = ConnectionMultiplexer.Connect(configuration);
-            _defaultExpiry = defaultExpiry;
-            _defaultTimeout = defaultTimeout;
+            _redis = ConnectionMultiplexer.Connect(redisConfig.Configuration);
+            _defaultExpiry = redisConfig.DefaultExpiry;
+            _defaultTimeout = redisConfig.DefaultTimeout;
         }
 
-        public async Task<bool> AddAsync(string key, string value, RedisDatabaseNames dbName, TimeSpan? expiry = null)
+        public async Task<bool> AddAsync(string key, string value, TimeSpan? expiry = null)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -30,12 +29,12 @@ namespace EDA.Shared.Redis.Services
                 throw new ArgumentException("Value cannot be null or empty", nameof(value));
             }
 
-            var db = _redis.GetDatabase((int)dbName);
+            var db = _redis.GetDatabase();
             expiry ??= _defaultExpiry;
             return await db.StringSetAsync(key, value, expiry, When.NotExists);
         }
 
-        public async Task<bool> RemoveAsync(string key, RedisDatabaseNames dbName)
+        public async Task<bool> RemoveAsync(string key)
         {
 
             if (string.IsNullOrWhiteSpace(key))
@@ -43,14 +42,14 @@ namespace EDA.Shared.Redis.Services
                 throw new ArgumentException("Key cannot be null or empty", nameof(key));
             }
 
-            var db = _redis.GetDatabase((int)dbName);
+            var db = _redis.GetDatabase();
 
             return await db.KeyDeleteAsync(key);
         }
 
-        public async Task<(bool keyExists, string value)> KeyIsExistAsync(string key, RedisDatabaseNames dbName)
+        public async Task<(bool keyExists, string value)> KeyIsExistAsync(string key)
         {
-            var db = _redis.GetDatabase((int)dbName);
+            var db = _redis.GetDatabase();
             if (await db.KeyExistsAsync(key))
             {
                 var value = await db.StringGetAsync(key);
@@ -60,7 +59,7 @@ namespace EDA.Shared.Redis.Services
             return (false, string.Empty);
         }
 
-        public async Task<string> WaitForKeyAsync(string key, RedisDatabaseNames dbName, TimeSpan? timeout = null)
+        public async Task<string> WaitForKeyAsync(string key,  TimeSpan? timeout = null)
         {
             timeout ??= _defaultTimeout;
             var cancellationTokenSource = new CancellationTokenSource((TimeSpan)timeout);
@@ -68,7 +67,7 @@ namespace EDA.Shared.Redis.Services
             {
                 while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    (bool keyExists, string value) = await KeyIsExistAsync(key, dbName);
+                    (bool keyExists, string value) = await KeyIsExistAsync(key);
                     if (keyExists)
                     {
                         return value;
@@ -86,7 +85,12 @@ namespace EDA.Shared.Redis.Services
             }
         }
 
-        public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
+        public void Dispose()
+        {
+            Dispose(true); 
+            GC.SuppressFinalize(this);
+
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

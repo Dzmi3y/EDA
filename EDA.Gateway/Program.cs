@@ -1,6 +1,8 @@
 using Confluent.Kafka;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Producer;
+using EDA.Shared.Redis;
+using EDA.Shared.Redis.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,14 @@ var consumerConfig = new ConsumerConfig
 };
 builder.Services.AddSingleton(consumerConfig);
 builder.Services.AddSingleton<IKafkaConsumer, KafkaConsumer>();
+var redisConfig = new RedisConfig
+{
+    Configuration = "localhost:6379",
+    DefaultExpiry = TimeSpan.FromMinutes(30),
+    DefaultTimeout = TimeSpan.FromMinutes(3)
+};
+builder.Services.AddSingleton(redisConfig);
+builder.Services.AddSingleton<IRedisService, IRedisService>();
 //builder.Services.AddHostedService<KafkaConsumer>();
 
 var app = builder.Build();

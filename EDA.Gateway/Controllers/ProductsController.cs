@@ -1,8 +1,11 @@
-﻿using EDA.Shared.Kafka.Consumer;
+﻿using Confluent.Kafka;
+using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages;
 using EDA.Shared.Kafka.Producer;
+using EDA.Shared.Redis.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace EDA.Gateway.Controllers
 {
@@ -12,23 +15,25 @@ namespace EDA.Gateway.Controllers
     {
         private readonly IKafkaProducer _producer;
         private readonly IKafkaConsumer _consumer;
+        private readonly IRedisService _redis;
 
-        public ProductsController(IKafkaProducer producer, IKafkaConsumer consumer)
+        public ProductsController(IKafkaProducer producer, IKafkaConsumer consumer, IRedisService redis)
         {
             _producer = producer;
             _consumer = consumer;
+            _redis = redis;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             try
             {
-                //var key = Guid.NewGuid();
+                var message = new ProductPageRequestMessage(8, 2);
+                string key = message.ToString();
+
                 
-                Guid.TryParse("f99ad5f7-6bbd-409a-9fc7-f2469e7b69ba", out Guid key);
-                
-                await _producer.SendMessageAsync(
-                    Topics.Products, key, new ProductPageRequestMessage(8, 2));
+                await _producer.SendMessageAsync(Topics.Products, key, message);
+
                 //var cts = new CancellationTokenSource();
 
                 //var result = await _consumer.StartConsuming(cts.Token, Topics.Products, key);

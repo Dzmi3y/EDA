@@ -14,5 +14,10 @@ namespace EDA.Shared.Kafka.Messages
 
         public int PageSize { get; set; }
         public int StartIndex { get; set; }
+
+        public override string ToString()
+        {
+            return $"PS{PageSize}SI{StartIndex}";
+        }
     }
 }

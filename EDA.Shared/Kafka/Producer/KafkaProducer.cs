@@ -14,12 +14,12 @@ namespace EDA.Shared.Kafka.Producer
             _producer = new ProducerBuilder<String, string>(config).Build();
         }
 
-        public async Task SendMessageAsync(Topics topic,Guid key, MessageBase message)
+        public async Task SendMessageAsync(Topics topic,string key, MessageBase message)
         {
             string jsonString = JsonConvert.SerializeObject(message, Formatting.Indented);
             var msg = new Message<String, string>
             {
-                Key = key.ToString(),
+                Key = key,
                 Value = jsonString
             };
             await _producer.ProduceAsync(topic.ToStringRepresentation(), msg);
