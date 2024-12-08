@@ -56,6 +56,12 @@ services:
       KAFKA_JMX_HOSTNAME: kafka
     volumes: 
       - kafka-data:/kafka
+    command: > 
+      sh -c " /etc/confluent/docker/run & 
+      sleep 5; 
+      kafka-topics --create --topic ProductPageResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 && 
+      kafka-topics --create --topic ProductPageRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 && 
+      sleep infinity "
   eda_kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest

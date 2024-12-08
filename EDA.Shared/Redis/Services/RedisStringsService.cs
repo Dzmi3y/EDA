@@ -3,7 +3,7 @@ using StackExchange.Redis;
 
 namespace EDA.Shared.Redis.Services
 {
-    public class RedisStringsService : IRedisService
+    public class RedisStringsService : IRedisStringsService
     {
         private readonly ConnectionMultiplexer _redis;
         private readonly TimeSpan _defaultExpiry;
@@ -47,7 +47,7 @@ namespace EDA.Shared.Redis.Services
             return await db.KeyDeleteAsync(key);
         }
 
-        public async Task<(bool keyExists, string value)> KeyIsExistAsync(string key)
+        public async Task<(bool keyExists, string value)> CheckKeyExistsAsync(string key)
         {
             var db = _redis.GetDatabase();
             if (await db.KeyExistsAsync(key))
@@ -67,7 +67,7 @@ namespace EDA.Shared.Redis.Services
             {
                 while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    (bool keyExists, string value) = await KeyIsExistAsync(key);
+                    (bool keyExists, string value) = await CheckKeyExistsAsync(key);
                     if (keyExists)
                     {
                         return value;

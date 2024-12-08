@@ -4,17 +4,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace EDA.Shared.Kafka.Consumer
 {
-    public class KafkaConsumer : BackgroundService, IKafkaConsumer
+    public abstract class KafkaConsumerBase : BackgroundService
     {
         private readonly IConsumer<string, string> _consumer;
         private readonly Topics? _topic;
-        private readonly Action<ConsumeResult<string, string>>? _handler;
 
-        public KafkaConsumer(ConsumerConfig config, Action<ConsumeResult<string, string>>? handler = null, Topics? topic = null)
+        protected KafkaConsumerBase(ConsumerConfig config, Topics topic)
         {
             _consumer = new ConsumerBuilder<string, string>(config).Build();
             _topic = topic;
-            _handler = handler;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,9 +22,10 @@ namespace EDA.Shared.Kafka.Consumer
                 throw new ArgumentNullException(nameof(_topic), "Topic cannot be null or empty.");
             }
 
-            await StartConsuming(stoppingToken, (Topics)_topic, _handler);
+            await Task.Run(() =>  StartConsuming(stoppingToken, (Topics)_topic), stoppingToken);
         }
-        public async Task StartConsuming(CancellationToken stoppingToken, Topics topic, Action<ConsumeResult<string, string>>? messageHandler)
+
+        public async Task StartConsuming(CancellationToken stoppingToken, Topics topic)
         {
             _consumer.Subscribe(topic.ToStringRepresentation());
             try
@@ -36,9 +35,9 @@ namespace EDA.Shared.Kafka.Consumer
                     var consumeResult = _consumer.Consume(stoppingToken);
 
                     _consumer.Consume(stoppingToken);
-                    if (consumeResult != null && messageHandler != null)
+                    if (consumeResult != null)
                     {
-                        await Task.Run(() => messageHandler.Invoke(consumeResult), stoppingToken);
+                        await HandleAsync(consumeResult);
                     }
                 }
             }
@@ -47,6 +46,8 @@ namespace EDA.Shared.Kafka.Consumer
                 _consumer.Close();
             }
         }
+
+        protected abstract Task HandleAsync(ConsumeResult<string, string> result);
 
         public override void Dispose()
         {

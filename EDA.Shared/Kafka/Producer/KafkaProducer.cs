@@ -1,7 +1,5 @@
 ﻿using Confluent.Kafka;
 using EDA.Shared.Kafka.Enums;
-using EDA.Shared.Kafka.Messages.Base;
-using Newtonsoft.Json;
 
 namespace EDA.Shared.Kafka.Producer
 {
@@ -14,13 +12,12 @@ namespace EDA.Shared.Kafka.Producer
             _producer = new ProducerBuilder<String, string>(config).Build();
         }
 
-        public async Task SendMessageAsync(Topics topic,string key, MessageBase message)
+        public async Task SendMessageAsync(Topics topic,string key, string message)
         {
-            string jsonString = JsonConvert.SerializeObject(message, Formatting.Indented);
             var msg = new Message<String, string>
             {
                 Key = key,
-                Value = jsonString
+                Value = message
             };
             await _producer.ProduceAsync(topic.ToStringRepresentation(), msg);
         }

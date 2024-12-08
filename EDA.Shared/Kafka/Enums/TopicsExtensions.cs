@@ -6,12 +6,10 @@
         {
             switch (topic)
             {
-                case Topics.Products:
-                    return "products";
-                case Topics.Orders:
-                    return "orders";
-                case Topics.Users:
-                    return "users";
+                case Topics.ProductPageResponse:
+                    return "ProductPageResponse";
+                case Topics.ProductPageRequest:
+                    return "ProductPageRequest";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(topic), topic, null);
             }

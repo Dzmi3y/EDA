@@ -5,6 +5,7 @@ using EDA.Shared.Kafka.Messages;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 
 namespace EDA.Gateway.Controllers
@@ -14,32 +15,34 @@ namespace EDA.Gateway.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IKafkaProducer _producer;
-        private readonly IKafkaConsumer _consumer;
-        private readonly IRedisService _redis;
+        private readonly IRedisStringsService _redis;
 
-        public ProductsController(IKafkaProducer producer, IKafkaConsumer consumer, IRedisService redis)
+        public ProductsController(IKafkaProducer producer, IRedisStringsService redis)
         {
             _producer = producer;
-            _consumer = consumer;
             _redis = redis;
         }
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery]int size,int startIndex )
         {
             try
             {
-                var message = new ProductPageRequestMessage(8, 2);
-                string key = message.ToString();
+                var message = new ProductPageRequestMessage(size, startIndex);
+                var key = message.ToKeyString();
+                var value = message.ToString();
 
-                
-                await _producer.SendMessageAsync(Topics.Products, key, message);
+                (bool keyExists, string result) = await _redis.CheckKeyExistsAsync(key);
 
-                //var cts = new CancellationTokenSource();
+                if (keyExists)
+                {
+                    return Ok($"Successful {result}");
+                }
 
-                //var result = await _consumer.StartConsuming(cts.Token, Topics.Products, key);
+                await _producer.SendMessageAsync(Topics.ProductPageRequest, key, value);
 
+                result = await _redis.WaitForKeyAsync(key);
 
-                return Ok($"Successful");
+                return Ok($"Successful {result}");
             }
             catch (Exception ex)
             {

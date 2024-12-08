@@ -1,21 +1,25 @@
-﻿using EDA.Shared.Kafka.Enums;
-using EDA.Shared.Kafka.Messages.Base;
+﻿using Newtonsoft.Json;
 
 namespace EDA.Shared.Kafka.Messages
 {
-    public class ProductPageRequestMessage : MessageBase
+    public class ProductPageRequestMessage 
     {
         public ProductPageRequestMessage(int pageSize, int startIndex = 0)
-            :base(EventTypes.ProductPageRequest)
         {
             PageSize = pageSize;
             StartIndex = startIndex;
-        }
+        } 
 
         public int PageSize { get; set; }
         public int StartIndex { get; set; }
 
         public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            
+        }
+
+        public string ToKeyString()
         {
             return $"PS{PageSize}SI{StartIndex}";
         }
