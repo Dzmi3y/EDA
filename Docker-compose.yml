@@ -7,6 +7,9 @@ services:
     ports:
       - "80:8080"
       - "81:8081"
+    depends_on:
+      - eda_kafka
+      - eda_redis
   eda_client:
     container_name: client
     build:
@@ -56,12 +59,19 @@ services:
       KAFKA_JMX_HOSTNAME: kafka
     volumes: 
       - kafka-data:/kafka
-    command: > 
-      sh -c " /etc/confluent/docker/run & 
-      sleep 5; 
-      kafka-topics --create --topic ProductPageResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 && 
-      kafka-topics --create --topic ProductPageRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 && 
-      sleep infinity "
+    command: >
+      sh -c "
+      /etc/confluent/docker/run &
+      while ! nc -z localhost 9092; do
+        echo 'Waiting for Kafka to start...';
+        sleep 1;
+      done;
+      kafka-topics --create --topic ProductPageResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
+      kafka-topics --create --topic ProductPageRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
+      echo 'Topics created successfully';
+      sleep infinity
+      "
+
   eda_kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
@@ -75,7 +85,7 @@ services:
       image: postgres:latest
       environment:
         POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: p@ssw0rd
+        POSTGRES_PASSWORD: passw0rd
         POSTGRES_DB: eda_user
       volumes: 
           - postgres-user-data-db:/var/lib/postgresql/data
@@ -87,7 +97,7 @@ services:
       image: postgres:latest
       environment:
         POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: p@ssw0rd
+        POSTGRES_PASSWORD: passw0rd
         POSTGRES_DB: eda_order
       volumes: 
           - postgres-order-data-db:/var/lib/postgresql/data
@@ -100,7 +110,7 @@ services:
     restart: always 
     environment: 
         MONGO_INITDB_ROOT_USERNAME: mongouser 
-        MONGO_INITDB_ROOT_PASSWORD: p@ssw0rd 
+        MONGO_INITDB_ROOT_PASSWORD: passw0rd 
     volumes: 
         - mongo-data:/data/db 
     ports: 

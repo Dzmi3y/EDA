@@ -1,5 +1,6 @@
 ﻿using EDA.Shared.Redis.Interfaces;
 using StackExchange.Redis;
+using System;
 
 namespace EDA.Shared.Redis.Services
 {
@@ -10,11 +11,11 @@ namespace EDA.Shared.Redis.Services
         private readonly TimeSpan _defaultTimeout;
         private bool _disposed = false;
 
-        public RedisStringsService(RedisConfig redisConfig)
+        public RedisStringsService(RedisConfig config)
         {
-            _redis = ConnectionMultiplexer.Connect(redisConfig.Configuration);
-            _defaultExpiry = redisConfig.DefaultExpiry;
-            _defaultTimeout = redisConfig.DefaultTimeout;
+            _redis = ConnectionMultiplexer.Connect(config.Configuration);
+            _defaultExpiry = TimeSpan.FromMinutes(config.DefaultExpiryMin);
+            _defaultTimeout = TimeSpan.FromMinutes(config.DefaultTimeoutMin);
         }
 
         public async Task<bool> AddAsync(string key, string value, TimeSpan? expiry = null)
@@ -59,7 +60,7 @@ namespace EDA.Shared.Redis.Services
             return (false, string.Empty);
         }
 
-        public async Task<string> WaitForKeyAsync(string key,  TimeSpan? timeout = null)
+        public async Task<string> WaitForKeyAsync(string key, TimeSpan? timeout = null)
         {
             timeout ??= _defaultTimeout;
             var cancellationTokenSource = new CancellationTokenSource((TimeSpan)timeout);
@@ -87,7 +88,7 @@ namespace EDA.Shared.Redis.Services
 
         public void Dispose()
         {
-            Dispose(true); 
+            Dispose(true);
             GC.SuppressFinalize(this);
 
         }

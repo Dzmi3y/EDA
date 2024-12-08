@@ -11,19 +11,19 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["EDA.Services.Сatalog/EDA.Services.Сatalog.csproj", "EDA.Services.Сatalog/"]
-RUN dotnet restore "./EDA.Services.Сatalog/EDA.Services.Сatalog.csproj"
+COPY ["EDA.Services.Catalog/EDA.Services.Catalog.csproj", "EDA.Services.Catalog/"]
+RUN dotnet restore "./EDA.Services.Catalog/EDA.Services.Catalog.csproj"
 COPY . .
-WORKDIR "/src/EDA.Services.Сatalog"
-RUN dotnet build "./EDA.Services.Сatalog.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/EDA.Services.Catalog"
+RUN dotnet build "./EDA.Services.Catalog.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./EDA.Services.Сatalog.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./EDA.Services.Catalog.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EDA.Services.Сatalog.dll"]
+ENTRYPOINT ["dotnet", "EDA.Services.Catalog.dll"]

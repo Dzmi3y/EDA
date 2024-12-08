@@ -1,11 +1,9 @@
-﻿using StackExchange.Redis;
-using System;
-namespace EDA.Shared.Redis
+﻿namespace EDA.Shared.Redis
 {
     public class RedisConfig
     {
-        public required string Configuration;
-        public required TimeSpan DefaultExpiry;
-        public required TimeSpan DefaultTimeout;
+        public string Configuration {get; set; }
+        public int DefaultExpiryMin { get; set; }
+        public int DefaultTimeoutMin { get; set; }
     }
 }
