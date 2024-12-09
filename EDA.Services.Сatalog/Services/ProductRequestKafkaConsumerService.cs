@@ -33,13 +33,14 @@ namespace EDA.Services.Catalog.Services
 
                 if (message == null)
                 {
+                    _logger.LogError("ProductPageRequestMessage is null");
                     return;
                 }
 
                 var productList = await _repository
                     .GetListAsync(message.PageSize, message.PageNumber);
 
-                await _producer.SendMessageAsync(Topics.ProductPageRequest,
+                await _producer.SendMessageAsync(Topics.ProductPageResponse,
                      result.Message.Key, productList.ToJson());
             }
             catch (Exception ex)

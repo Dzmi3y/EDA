@@ -7,10 +7,10 @@ namespace EDA.Services.Catalog.Repositories
     {
         Task<long> GetProductCountAsync();
         Task<IEnumerable<Product>> GetListAsync(int pageSize, int pageNumber);
-        Task<Product> GetByIdAsync(Guid id); 
+        Task<Product> GetByIdAsync(string id); 
         Task AddAsync(Product product); 
         Task UpdateAsync(Product product); 
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(string id);
         Task InitializeProductsAsync();
     }
 }

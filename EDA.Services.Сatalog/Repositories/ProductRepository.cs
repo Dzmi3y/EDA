@@ -1,5 +1,4 @@
 ﻿using EDA.Services.Catalog.Data;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace EDA.Services.Catalog.Repositories
@@ -28,7 +27,7 @@ namespace EDA.Services.Catalog.Repositories
                 .ToListAsync(); 
         }
 
-        public async Task<Product> GetByIdAsync(Guid id)
+        public async Task<Product> GetByIdAsync(string id)
         {
             return await _products.Find(p => p.Id == id).FirstOrDefaultAsync();
         }
@@ -43,13 +42,14 @@ namespace EDA.Services.Catalog.Repositories
             await _products.ReplaceOneAsync(p => p.Id == product.Id, product);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(string id)
         {
             await _products.DeleteOneAsync(p => p.Id == id);
         }
 
         public async Task InitializeProductsAsync()
         {
+
             var productCount = await _products.CountDocumentsAsync(Builders<Product>.Filter.Empty);
             if (productCount == 0)
             {

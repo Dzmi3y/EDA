@@ -1,6 +1,7 @@
 ﻿using EDA.Shared.Redis.Interfaces;
 using StackExchange.Redis;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace EDA.Shared.Redis.Services
 {
@@ -11,8 +12,9 @@ namespace EDA.Shared.Redis.Services
         private readonly TimeSpan _defaultTimeout;
         private bool _disposed = false;
 
-        public RedisStringsService(RedisConfig config)
+        public RedisStringsService(RedisConfig config,ILogger<RedisStringsService> logger)
         {
+            logger.LogInformation("cooooooo nnnn ff iigg "+ config.Configuration);
             _redis = ConnectionMultiplexer.Connect(config.Configuration);
             _defaultExpiry = TimeSpan.FromMinutes(config.DefaultExpiryMin);
             _defaultTimeout = TimeSpan.FromMinutes(config.DefaultTimeoutMin);

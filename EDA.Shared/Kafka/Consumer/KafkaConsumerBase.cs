@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using EDA.Shared.Kafka.Enums;
 using Microsoft.Extensions.Hosting;
+using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace EDA.Shared.Kafka.Consumer
 {
@@ -22,7 +23,7 @@ namespace EDA.Shared.Kafka.Consumer
                 throw new ArgumentNullException(nameof(_topic), "Topic cannot be null or empty.");
             }
 
-            await Task.Run(() =>  StartConsuming(stoppingToken, (Topics)_topic), stoppingToken);
+            await StartConsuming(stoppingToken, (Topics)_topic);
         }
 
         public async Task StartConsuming(CancellationToken stoppingToken, Topics topic)

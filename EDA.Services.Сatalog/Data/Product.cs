@@ -2,7 +2,7 @@
 {
     public class Product
     {
-        public Product(Guid id, string title, string description, string imageUrl,
+        public Product(string id, string title, string description, string imageUrl,
             decimal price, int count)
         {
             Id = id;
@@ -12,7 +12,9 @@
             Price = price;
             Count = count;
         }
-        public Guid Id { get; set; }
+
+
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
