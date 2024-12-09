@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using EDA.Shared.Kafka.Enums;
 using Microsoft.Extensions.Hosting;
-using static Confluent.Kafka.ConfigPropertyNames;
+using Microsoft.Extensions.Logging;
 
 namespace EDA.Shared.Kafka.Consumer
 {
@@ -9,12 +9,46 @@ namespace EDA.Shared.Kafka.Consumer
     {
         private readonly IConsumer<string, string> _consumer;
         private readonly Topics? _topic;
+        private readonly ILogger<KafkaConsumerBase> _logger;
+        private readonly KafkaConsumerBaseConfig _config;
 
-        protected KafkaConsumerBase(ConsumerConfig config, Topics topic)
+        protected KafkaConsumerBase(KafkaConsumerBaseConfig config, Topics topic, ILogger<KafkaConsumerBase> logger)
         {
             _consumer = new ConsumerBuilder<string, string>(config).Build();
             _topic = topic;
+            _logger = logger;
+            _config= config;
         }
+
+        private async Task TryToStartConsuming(CancellationToken stoppingToken)
+        {
+             int maxRetryCount = _config.MaxRetryCount;
+             int baseDelayMilliseconds = _config.BaseDelayMilliseconds;
+
+            for (var i = 0; i < maxRetryCount; i++)
+            {
+                try
+                {
+                    await Task.Run(() => StartConsuming(stoppingToken, (Topics)_topic), stoppingToken);
+                    return; 
+                }
+                catch (ConsumeException ex)
+                {
+                    _logger.LogError($"Attempt {i + 1} failed: {ex.Message}");
+
+                    if (i == maxRetryCount - 1)
+                    {
+                        _logger.LogError("Max retry attempts reached. Throwing exception.");
+                        throw; 
+                    }
+
+                    var delay = baseDelayMilliseconds * Math.Pow(2, i);
+                    _logger.LogInformation($"Waiting {delay}ms before next retry attempt.");
+                    await Task.Delay((int)delay, stoppingToken);
+                }
+            }
+        }
+
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -23,8 +57,17 @@ namespace EDA.Shared.Kafka.Consumer
                 throw new ArgumentNullException(nameof(_topic), "Topic cannot be null or empty.");
             }
 
-            await Task.Run( () =>  StartConsuming(stoppingToken, (Topics)_topic), stoppingToken);
+            try
+            {
+                await TryToStartConsuming(stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unexpected error: {ex.Message}");
+                throw;
+            }
         }
+
 
         public async Task StartConsuming(CancellationToken stoppingToken, Topics topic)
         {

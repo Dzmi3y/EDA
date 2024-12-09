@@ -2,6 +2,7 @@ using Confluent.Kafka;
 using EDA.Services.Catalog;
 using EDA.Services.Catalog.Repositories;
 using EDA.Services.Catalog.Services;
+using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Producer;
 using Microsoft.Extensions.Options;
@@ -31,9 +32,9 @@ builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<ProducerConfig>>().Value);
 builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 
-builder.Services.Configure<ConsumerConfig>(builder.Configuration.GetSection("ConsumerConfig"));
+builder.Services.Configure<KafkaConsumerBaseConfig>(builder.Configuration.GetSection("ConsumerConfig"));
 builder.Services.AddSingleton(resolver =>
-    resolver.GetRequiredService<IOptions<ConsumerConfig>>().Value);
+    resolver.GetRequiredService<IOptions<KafkaConsumerBaseConfig>>().Value);
 
 builder.Services.AddHostedService<ProductRequestKafkaConsumerService>();
 

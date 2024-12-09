@@ -15,10 +15,10 @@ namespace EDA.Services.Catalog.Services
         private readonly IProductRepository _repository;
         private readonly ILogger<ProductRequestKafkaConsumerService> _logger;
 
-        public ProductRequestKafkaConsumerService(ConsumerConfig config,
+        public ProductRequestKafkaConsumerService(KafkaConsumerBaseConfig config,
             IKafkaProducer producer, IProductRepository repository,
             ILogger<ProductRequestKafkaConsumerService> logger)
-            : base(config, Topics.ProductPageRequest)
+            : base(config, Topics.ProductPageRequest, logger)
         {
             _producer = producer;
             _repository = repository;

@@ -1,6 +1,5 @@
 ﻿using EDA.Shared.Redis.Interfaces;
 using StackExchange.Redis;
-using System;
 using Microsoft.Extensions.Logging;
 
 namespace EDA.Shared.Redis.Services
