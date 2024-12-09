@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDA.Services", "EDA.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Services.Order", "EDA.Services.Order\EDA.Services.Order.csproj", "{9E330185-E749-4CEF-B0BB-C19496014A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Services.Catalog", "EDA.Services.Сatalog\EDA.Services.Catalog.csproj", "{E4E4743E-B218-494F-9808-55DC00EC5BB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Services.Catalog", "EDA.Services.Catalog\EDA.Services.Catalog.csproj", "{E4E4743E-B218-494F-9808-55DC00EC5BB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Services.User", "EDA.Services.User\EDA.Services.User.csproj", "{0623C0F7-7892-4FAF-9564-577E718C6FC9}"
 EndProject

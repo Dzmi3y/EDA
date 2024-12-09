@@ -36,12 +36,14 @@ builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<ConsumerConfig>>().Value);
 
 builder.Services.AddHostedService<ProductRequestKafkaConsumerService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var repository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
     await repository.InitializeProductsAsync();
+
 }
 
 app.Run();

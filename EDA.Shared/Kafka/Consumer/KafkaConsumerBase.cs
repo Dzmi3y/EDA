@@ -23,7 +23,7 @@ namespace EDA.Shared.Kafka.Consumer
                 throw new ArgumentNullException(nameof(_topic), "Topic cannot be null or empty.");
             }
 
-            await StartConsuming(stoppingToken, (Topics)_topic);
+            await Task.Run( () =>  StartConsuming(stoppingToken, (Topics)_topic), stoppingToken);
         }
 
         public async Task StartConsuming(CancellationToken stoppingToken, Topics topic)
@@ -35,7 +35,6 @@ namespace EDA.Shared.Kafka.Consumer
                 {
                     var consumeResult = _consumer.Consume(stoppingToken);
 
-                    _consumer.Consume(stoppingToken);
                     if (consumeResult != null)
                     {
                         await HandleAsync(consumeResult);

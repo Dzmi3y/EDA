@@ -34,7 +34,7 @@ builder.Services.AddHostedService<ProductResponseKafkaConsumerService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

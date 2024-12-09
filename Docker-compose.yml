@@ -1,4 +1,12 @@
 services:
+  eda_catalog:
+    container_name: catalog
+    build:
+      context: ./
+      dockerfile: ./EDA.Services.Catalog/Dockerfile
+    depends_on:
+      - eda_kafka
+      - eda_mongo
   eda_gateway:
     container_name: gateway
     build:

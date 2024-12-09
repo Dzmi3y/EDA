@@ -12,9 +12,8 @@ namespace EDA.Shared.Redis.Services
         private readonly TimeSpan _defaultTimeout;
         private bool _disposed = false;
 
-        public RedisStringsService(RedisConfig config,ILogger<RedisStringsService> logger)
+        public RedisStringsService(RedisConfig config, ILogger<RedisStringsService> logger)
         {
-            logger.LogInformation("cooooooo nnnn ff iigg "+ config.Configuration);
             _redis = ConnectionMultiplexer.Connect(config.Configuration);
             _defaultExpiry = TimeSpan.FromMinutes(config.DefaultExpiryMin);
             _defaultTimeout = TimeSpan.FromMinutes(config.DefaultTimeoutMin);
