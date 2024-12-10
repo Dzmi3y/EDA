@@ -7,25 +7,26 @@ namespace EDA.Gateway.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class OrdersController : ControllerBase
+    public class BasketsController : ControllerBase
     {
         private readonly IKafkaProducer _producer;
         private readonly IRedisStringsService _redis;
 
-        public OrdersController(IKafkaProducer producer, IRedisStringsService redis)
+        public BasketsController(IKafkaProducer producer, IRedisStringsService redis)
         {
             _producer = producer;
             _redis = redis;
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public IActionResult GetBasket()
         {
             return Ok();
         }
 
-        [HttpPost]
-        public IActionResult CreateOrder([FromBody] List<BasketItemDTO> orderList)
+
+        [HttpPut]
+        public IActionResult UpdateBasket([FromBody] List<BasketItemDTO> items)
         {
             return Ok();
         }

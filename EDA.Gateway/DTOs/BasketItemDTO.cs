@@ -1,6 +1,6 @@
 ﻿namespace EDA.Gateway.DTOs
 {
-    public class OrderItemDTO
+    public class BasketItemDTO
     {
         public string ProductId { get; set; }
         public string Count { get; set; }
