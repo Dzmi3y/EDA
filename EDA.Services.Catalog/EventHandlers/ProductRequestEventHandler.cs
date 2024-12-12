@@ -7,17 +7,17 @@ using EDA.Shared.Kafka.Producer;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 
-namespace EDA.Services.Catalog.Services
+namespace EDA.Services.Catalog.EventHandlers
 {
-    public class ProductRequestKafkaConsumerService : KafkaConsumerBase
+    public class ProductRequestEventHandler : KafkaConsumerBase
     {
         private readonly IKafkaProducer _producer;
         private readonly IProductRepository _repository;
-        private readonly ILogger<ProductRequestKafkaConsumerService> _logger;
+        private readonly ILogger<ProductRequestEventHandler> _logger;
 
-        public ProductRequestKafkaConsumerService(KafkaConsumerBaseConfig config,
+        public ProductRequestEventHandler(KafkaConsumerBaseConfig config,
             IKafkaProducer producer, IProductRepository repository,
-            ILogger<ProductRequestKafkaConsumerService> logger)
+            ILogger<ProductRequestEventHandler> logger)
             : base(config, Topics.ProductPageRequest, logger)
         {
             _producer = producer;

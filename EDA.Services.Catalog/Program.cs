@@ -1,7 +1,7 @@
 using Confluent.Kafka;
 using EDA.Services.Catalog;
+using EDA.Services.Catalog.EventHandlers;
 using EDA.Services.Catalog.Repositories;
-using EDA.Services.Catalog.Services;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Producer;
@@ -36,7 +36,7 @@ builder.Services.Configure<KafkaConsumerBaseConfig>(builder.Configuration.GetSec
 builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaConsumerBaseConfig>>().Value);
 
-builder.Services.AddHostedService<ProductRequestKafkaConsumerService>();
+builder.Services.AddHostedService<ProductRequestEventHandler>();
 
 var app = builder.Build();
 

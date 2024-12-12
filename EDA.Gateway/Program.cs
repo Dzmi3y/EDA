@@ -1,5 +1,5 @@
 using Confluent.Kafka;
-using EDA.Gateway.Services;
+using EDA.Gateway.EventHandlers;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis;
@@ -31,7 +31,8 @@ builder.Services.AddSingleton<IRedisStringsService, RedisStringsService>();
 builder.Services.Configure<KafkaConsumerBaseConfig>(builder.Configuration.GetSection("ConsumerConfig"));
 builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaConsumerBaseConfig>>().Value);
-builder.Services.AddHostedService<ProductResponseKafkaConsumerService>();
+
+builder.Services.AddHostedService<ProductResponseEventHandler>();
 
 var app = builder.Build();
 
