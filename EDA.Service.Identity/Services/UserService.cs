@@ -4,7 +4,6 @@ using EDA.Service.Identity.Models;
 using EDA.Shared.DTOs;
 using EDA.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EDA.Service.Identity.Services

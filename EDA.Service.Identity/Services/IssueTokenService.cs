@@ -7,6 +7,7 @@ using EDA.Service.Identity.Entities;
 using EDA.Service.Identity.Models;
 using EDA.Service.Identity.Interfaces;
 using EDA.Service.Identity.Enums;
+using EDA.Shared.Authorization;
 
 namespace EDA.Service.Identity.Services
 {
@@ -36,9 +37,9 @@ namespace EDA.Service.Identity.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
 
-            tokenDescriptor.Subject.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
-            tokenDescriptor.Subject.AddClaim(new Claim("name", user.Name));
-            tokenDescriptor.Subject.AddClaim(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+            tokenDescriptor.Subject.AddClaim(new Claim(Claims.Id, user.Id.ToString()));
+            tokenDescriptor.Subject.AddClaim(new Claim(Claims.Name, user.Name));
+            tokenDescriptor.Subject.AddClaim(new Claim(Claims.Email, user.Email));
             
 
             var accessToken = tokenHandler.CreateToken(tokenDescriptor);
