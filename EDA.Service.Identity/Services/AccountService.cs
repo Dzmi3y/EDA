@@ -4,21 +4,24 @@ using EDA.Service.Identity.Models;
 using EDA.Shared.DTOs;
 using EDA.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EDA.Service.Identity.Services
 {
-    public class UserService: IUserService
+    public class AccountService: IAccountService
     {
         private readonly AppDbContext _db;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IIssueTokenService _issueTokenService;
-        public UserService(AppDbContext db, IIssueTokenService issueTokenService,
-            IPasswordHasher<User> passwordHasher)
+        private readonly RefreshTokenService _refreshTokenService;
+        public AccountService(AppDbContext db, IIssueTokenService issueTokenService,
+            RefreshTokenService refreshTokenService, IPasswordHasher<User> passwordHasher)
         {
             _db = db;
             _passwordHasher = passwordHasher;
             _issueTokenService = issueTokenService;
+            _refreshTokenService = refreshTokenService;
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -46,7 +49,7 @@ namespace EDA.Service.Identity.Services
             return newUser;
         }
 
-        public async Task<Guid> SignUp(SignUpUserDto userDto)
+        public async Task<Guid> SignUpAsync(SignUpUserDto userDto)
         {
             var newUser = await GetNewUserAsync(userDto);
 
@@ -56,7 +59,7 @@ namespace EDA.Service.Identity.Services
             return newUser.Id;
         }
 
-        public async Task<AuthenticationResult> SignIn(SignInUserDto userDto)
+        public async Task<AuthenticationResult> SignInAsync(SignInUserDto userDto)
         {
             var user = await GetUserByEmailAsync(userDto.Email);
 
@@ -70,6 +73,25 @@ namespace EDA.Service.Identity.Services
 
             var tokenIssueServiceResponse = await _issueTokenService.GenerateAuthenticationResult(user);
             return tokenIssueServiceResponse;
+        }
+
+        public async Task SignOutAsync(Guid refreshToken)
+        {
+            await _refreshTokenService.SetAsInvalidatedAsync(refreshToken);
+        }
+
+        public async Task<AuthenticationResult> RefreshAsync(Guid refreshToken)
+        {
+            return await _issueTokenService.RefreshTokenAsync(refreshToken);
+        }
+
+        public async Task DeleteAccountAsync(Guid userId)
+        {
+            var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user == null) return;
+
+            user.IsDeleted = true;
+            await _db.SaveChangesAsync();
         }
 
     }

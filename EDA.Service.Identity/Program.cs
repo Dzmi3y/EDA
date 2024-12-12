@@ -20,7 +20,7 @@ builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 builder.Services.AddScoped<IIssueTokenService, IssueTokenService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
 var app = builder.Build();
