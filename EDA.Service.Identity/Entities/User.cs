@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using EDA.Service.Identity.Data.Base;
+using EDA.Service.Identity.Entities.Base;
 
 
-namespace EDA.Service.Identity.Data
+namespace EDA.Service.Identity.Entities
 {
     public class User : AuditableEntity
     {

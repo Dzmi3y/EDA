@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+using EDA.Service.Identity.Interfaces;
+using EDA.Service.Identity.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,11 @@ JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 var jwtSettings = new JwtSettings();
 builder.Configuration.Bind(nameof(JwtSettings), jwtSettings);
 builder.Services.AddSingleton(jwtSettings);
+
+builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
+builder.Services.AddScoped<IIssueTokenService, IssueTokenService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -41,7 +49,4 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 
-
-
 app.Run();
-
