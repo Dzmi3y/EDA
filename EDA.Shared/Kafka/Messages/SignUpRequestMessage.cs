@@ -1,11 +1,11 @@
 ﻿using EDA.Shared.Authorization;
 
-namespace EDA.Shared.DTOs
+namespace EDA.Shared.Kafka.Messages
 {
-    public class SignUpUserDto: IUser
+    public class SignUpRequestMessage : MessageBase, IUser
     {
+        public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
     }
 }

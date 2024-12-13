@@ -1,11 +1,20 @@
-﻿
-namespace EDA.Shared.Kafka.Enums
+﻿namespace EDA.Shared.Kafka.Enums
 {
     public enum Topics
     {
         ProductPageRequest,
-        ProductPageResponse
+        ProductPageResponse,
+        SignInRequest,
+        SignInResponse,
+        SignUpRequest,
+        SignUpResponse,
+        SignOutRequest,
+        SignOutResponse,
+        TokenRefreshRequest,
+        TokenRefreshResponse,
+        DeleteAccountRequest,
+        DeleteAccountResponse
+
     }
 
 }
-

@@ -71,7 +71,7 @@ namespace EDA.Shared.Kafka.Consumer
 
         public async Task StartConsuming(CancellationToken stoppingToken, Topics topic)
         {
-            _consumer.Subscribe(topic.ToStringRepresentation());
+            _consumer.Subscribe(topic.ToString());
             try
             {
                 while (!stoppingToken.IsCancellationRequested)

@@ -19,7 +19,7 @@ namespace EDA.Shared.Kafka.Producer
                 Key = key,
                 Value = message
             };
-            await _producer.ProduceAsync(topic.ToStringRepresentation(), msg);
+            await _producer.ProduceAsync(topic.ToString(), msg);
         }
     }
 

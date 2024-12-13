@@ -5,6 +5,7 @@ using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis;
 using EDA.Shared.Redis.Interfaces;
 using EDA.Shared.Redis.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 
 builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection("ProducerConfig"));
 builder.Services.AddSingleton(resolver =>
