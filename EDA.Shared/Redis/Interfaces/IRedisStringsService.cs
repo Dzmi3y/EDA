@@ -5,7 +5,7 @@ namespace EDA.Shared.Redis.Interfaces
     {
         Task<bool> AddAsync(string key, string value, TimeSpan? expiry = null);
         Task<bool> RemoveAsync(string key);
-        Task<(bool keyExists, string value)> CheckKeyExistsAsync(string key);
-        Task<string> WaitForKeyAsync(string key, TimeSpan? timeout = null);
+        Task<(bool keyExists, string value)> ReadAsync(string key);
+        Task<string> WaitForKeyAsync(string key, bool deleteAfterReading = false, TimeSpan? timeout = null);
     }
 }

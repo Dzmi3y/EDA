@@ -44,7 +44,7 @@ namespace EDA.Gateway.Controllers
                 var value = signUpRequestMessage.ToString();
 
 
-                (bool keyExists, string result) = await _redis.CheckKeyExistsAsync(key);
+                (bool keyExists, string result) = await _redis.ReadAsync(key);
 
                 if (keyExists)
                 {

@@ -48,7 +48,25 @@ namespace EDA.Shared.Redis.Services
             return await db.KeyDeleteAsync(key);
         }
 
-        public async Task<(bool keyExists, string value)> CheckKeyExistsAsync(string key)
+        private async Task<(bool keyExists, string value)> ReadAndDelete(string key)
+        {
+            var db = _redis.GetDatabase();
+            string script = @" 
+                local value = redis.call('GET', KEYS[1]) 
+                if value 
+                    then redis.call('DEL', KEYS[1]) 
+                end 
+                return value ";
+
+            var result = await db.ScriptEvaluateAsync(script, new RedisKey[] { key });
+
+            var keyExists = !result.IsNull;
+            var value = result.IsNull ? string.Empty : result.ToString();
+
+            return (keyExists, value);
+        }
+
+        public async Task<(bool keyExists, string value)> ReadAsync(string key)
         {
             var db = _redis.GetDatabase();
             if (await db.KeyExistsAsync(key))
@@ -60,15 +78,18 @@ namespace EDA.Shared.Redis.Services
             return (false, string.Empty);
         }
 
-        public async Task<string> WaitForKeyAsync(string key, TimeSpan? timeout = null)
+        public async Task<string> WaitForKeyAsync(string key, bool deleteAfterReading = false, TimeSpan? timeout = null)
         {
             timeout ??= _defaultTimeout;
             var cancellationTokenSource = new CancellationTokenSource((TimeSpan)timeout);
             try
             {
+                Func<string, Task<(bool keyExists, string value)>> readFuncAsync = 
+                    deleteAfterReading ? ReadAndDelete : ReadAsync;
+
                 while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    (bool keyExists, string value) = await CheckKeyExistsAsync(key);
+                    (bool keyExists, string value) = await readFuncAsync(key);
                     if (keyExists)
                     {
                         return value;
