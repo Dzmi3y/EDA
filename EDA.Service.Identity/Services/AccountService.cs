@@ -14,9 +14,9 @@ namespace EDA.Service.Identity.Services
         private readonly AppDbContext _db;
         private readonly IPasswordHasher<IUser> _passwordHasher;
         private readonly IIssueTokenService _issueTokenService;
-        private readonly RefreshTokenService _refreshTokenService;
+        private readonly IRefreshTokenService _refreshTokenService;
         public AccountService(AppDbContext db, IIssueTokenService issueTokenService,
-            RefreshTokenService refreshTokenService, IPasswordHasher<IUser> passwordHasher)
+            IRefreshTokenService refreshTokenService, IPasswordHasher<IUser> passwordHasher)
         {
             _db = db;
             _passwordHasher = passwordHasher;

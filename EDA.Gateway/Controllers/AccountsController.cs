@@ -1,12 +1,16 @@
 ﻿using EDA.Gateway.Contracts.Requests;
+using EDA.Gateway.Contracts.Responses;
 using EDA.Shared.Authorization;
 using EDA.Shared.Kafka.Enums;
-using EDA.Shared.Kafka.Messages;
+using EDA.Shared.Kafka.Messages.Requests;
+using EDA.Shared.Kafka.Messages.Responses;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
+using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace EDA.Gateway.Controllers
 {
@@ -26,11 +30,27 @@ namespace EDA.Gateway.Controllers
             _passwordHasher = passwordHasher;
         }
 
-        [HttpPost]
+        [HttpPost("signup")]
+        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(UiSignUpResponse))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(UiSignUpResponse))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(UiSignUpResponse))]
         public async Task<IActionResult> SignUp([FromBody] UiSignUpRequest request)
         {
             try
             {
+                var isInValidData = 
+                    string.IsNullOrEmpty(request.Name) ||
+                    string.IsNullOrEmpty(request.Email) ||
+                    string.IsNullOrEmpty(request.Password);
+
+                if (isInValidData)
+                {
+                    return BadRequest(new UiSignUpResponse()
+                    {
+                        ErrorMessage = "Fields cannot be empty"
+                    });
+                }
+
                 var passwordHash = _passwordHasher.HashPassword(null, request.Password);
                 var key = Guid.NewGuid().ToString();
 
@@ -48,23 +68,60 @@ namespace EDA.Gateway.Controllers
 
                 if (keyExists)
                 {
-                    return Ok($"Successful {result}");
+                    return GetResult(result);
                 }
 
                 await _producer.SendMessageAsync(Topics.SignUpRequest, key, value);
 
-                result = await _redis.WaitForKeyAsync(key); //todo: set timeouts
+                result = await _redis.WaitForKeyAsync(key, true);
 
-                return Ok($"Successful {result}");
+                return GetResult(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new UiSignUpResponse
+                {
+                    ErrorMessage = "Internal Server Error"
+                });
             }
         }
 
-        [HttpPost]
-        public IActionResult Login([FromBody] string username)
+        [NonAction]
+        private IActionResult GetResult(string response)
+        {
+            var result = new UiSignUpResponse();
+            int status = (int)HttpStatusCode.InternalServerError;
+
+            try
+            {
+                var res = JsonConvert.DeserializeObject<SignUpResponseMessage>(response);
+                if (res == null)
+                {
+                    result.ErrorMessage = "Failed to deserialize response: returned null.";
+                }
+                else
+                {
+                    status = (int)res.Status;
+                    result.UserId = res.UserId;
+                    result.ErrorMessage = res.ExceptionMessage;
+                }
+            }
+            catch (JsonSerializationException ex)
+            {
+                result.ErrorMessage = "Error deserializing response.";
+            }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = "Unexpected error during deserialization.";
+            }
+
+            return StatusCode(status, result);
+        }
+
+
+        [HttpPost("signin")]
+        public IActionResult SignIn([FromBody] string username)
         {
             return Ok();
         }

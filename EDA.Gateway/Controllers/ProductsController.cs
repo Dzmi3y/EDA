@@ -1,12 +1,8 @@
-﻿using Confluent.Kafka;
-using EDA.Shared.Kafka.Consumer;
-using EDA.Shared.Kafka.Enums;
-using EDA.Shared.Kafka.Messages;
+﻿using EDA.Shared.Kafka.Enums;
+using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using StackExchange.Redis;
 
 namespace EDA.Gateway.Controllers
 {

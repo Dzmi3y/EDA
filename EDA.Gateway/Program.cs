@@ -35,6 +35,7 @@ builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaConsumerBaseConfig>>().Value);
 
 builder.Services.AddHostedService<ProductResponseEventHandler>();
+builder.Services.AddHostedService<SignUpResponseEventHandler>();
 
 var app = builder.Build();
 

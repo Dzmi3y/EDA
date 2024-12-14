@@ -76,6 +76,8 @@ services:
       done;
       kafka-topics --create --topic ProductPageResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
       kafka-topics --create --topic ProductPageRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
+      kafka-topics --create --topic SignUpRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
+      kafka-topics --create --topic SignUpResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
       echo 'Topics created successfully';
       sleep infinity "
 
@@ -88,47 +90,47 @@ services:
       DYNAMIC_CONFIG_ENABLED: true
 # DB
   eda_postgres_user:
-      container_name: postgresql-user
-      image: postgres:latest
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: passw0rd
-        POSTGRES_DB: eda_user
-      volumes: 
-          - postgres-user-data-db:/var/lib/postgresql/data
-      ports:
-        - "5432:5432"
-      restart: always
+    container_name: postgresql-user
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: passw0rd
+      POSTGRES_DB: eda_user
+    volumes: 
+      - postgres-user-data-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
   eda_postgres_order:
-      container_name: postgresql-order
-      image: postgres:latest
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: passw0rd
-        POSTGRES_DB: eda_order
-      volumes: 
-          - postgres-order-data-db:/var/lib/postgresql/data
-      ports:
-        - "5433:5432"
-      restart: always
+    container_name: postgresql-order
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: passw0rd
+      POSTGRES_DB: eda_order
+    volumes: 
+      - postgres-order-data-db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: always
   eda_mongo: 
     image: mongo:latest 
     container_name: mongo-catalog
     restart: always 
     environment: 
-        MONGO_INITDB_ROOT_USERNAME: mongouser 
-        MONGO_INITDB_ROOT_PASSWORD: passw0rd 
+      MONGO_INITDB_ROOT_USERNAME: mongouser 
+      MONGO_INITDB_ROOT_PASSWORD: passw0rd 
     volumes: 
-        - mongo-data:/data/db 
+      - mongo-data:/data/db 
     ports: 
-        - "27017:27017"
+      - "27017:27017"
   eda_redis: 
     image: "redis:latest" 
     container_name: "redis" 
     ports: 
-        - "6379:6379" 
+      - "6379:6379" 
     volumes: 
-        - redis_data:/data
+      - redis_data:/data
 volumes: 
   zookeeper-data: 
   zookeeper-log: 

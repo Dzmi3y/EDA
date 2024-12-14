@@ -1,6 +1,6 @@
 ﻿using EDA.Shared.Authorization;
 
-namespace EDA.Shared.Kafka.Messages
+namespace EDA.Shared.Kafka.Messages.Requests
 {
     public class SignUpRequestMessage : MessageBase, IUser
     {

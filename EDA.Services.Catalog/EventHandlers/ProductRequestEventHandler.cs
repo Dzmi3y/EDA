@@ -2,7 +2,7 @@
 using EDA.Services.Catalog.Repositories;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
-using EDA.Shared.Kafka.Messages;
+using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Producer;
 using MongoDB.Bson;
 using Newtonsoft.Json;
