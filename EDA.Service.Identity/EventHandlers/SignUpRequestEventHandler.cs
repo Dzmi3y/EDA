@@ -1,12 +1,12 @@
 ﻿using Confluent.Kafka;
 using EDA.Service.Identity.Interfaces;
-using EDA.Service.Identity.Services;
 using EDA.Shared.DTOs;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses;
+using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 using EDA.Shared.Kafka.Producer;
 using Newtonsoft.Json;
 using System.Net;
@@ -21,7 +21,7 @@ namespace EDA.Service.Identity.EventHandlers
         public SignUpRequestEventHandler(KafkaConsumerBaseConfig config,
             ILogger<SignUpRequestEventHandler> logger, IServiceScopeFactory scopeFactory,
             IKafkaProducer producer)
-            : base(config, Topics.SignUpRequest, logger) 
+            : base(config, Topics.SignUpRequest, logger)
         {
             _logger = logger;
             _producer = producer;
@@ -30,7 +30,7 @@ namespace EDA.Service.Identity.EventHandlers
 
         protected override async Task HandleAsync(ConsumeResult<string, string> result)
         {
-            var responseMessage = new SignUpResponseMessage();
+            var responseMessage = new ResponseMessage<SignUpResponsePayload>();
             try
             {
                 var message = JsonConvert.DeserializeObject<SignUpRequestMessage>(result.Message.Value);
@@ -57,7 +57,10 @@ namespace EDA.Service.Identity.EventHandlers
                 _logger.LogInformation($"User {stringUserId}  has been successfully registered");
 
                 responseMessage.Status = HttpStatusCode.Created;
-                responseMessage.UserId = stringUserId;
+                responseMessage.Payload = new SignUpResponsePayload()
+                {
+                    UserId = stringUserId
+                };
 
 
             }

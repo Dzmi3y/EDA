@@ -1,8 +1,8 @@
 ﻿namespace EDA.Gateway.Contracts.Responses
 {
-    public class UiSignUpResponse
+    public class UiSignUpResponse<T>
     {
        public string ErrorMessage { get; set; } = string.Empty;
-       public string UserId { get; set; } = string.Empty;
+       public T Payload { get; set; }
     }
 }

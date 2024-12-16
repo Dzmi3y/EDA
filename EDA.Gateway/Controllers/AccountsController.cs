@@ -4,6 +4,7 @@ using EDA.Shared.Authorization;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses;
+using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -31,24 +32,16 @@ namespace EDA.Gateway.Controllers
         }
 
         [HttpPost("signup")]
-        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(UiSignUpResponse))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(UiSignUpResponse))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(UiSignUpResponse))]
+        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(UiSignUpResponse<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(UiSignUpResponse<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(UiSignUpResponse<SignUpResponsePayload>))]
         public async Task<IActionResult> SignUp([FromBody] UiSignUpRequest request)
         {
             try
             {
-                var isInValidData = 
-                    string.IsNullOrEmpty(request.Name) ||
-                    string.IsNullOrEmpty(request.Email) ||
-                    string.IsNullOrEmpty(request.Password);
-
-                if (isInValidData)
+                if (IsInvalidRequest(request, out var badRequest))
                 {
-                    return BadRequest(new UiSignUpResponse()
-                    {
-                        ErrorMessage = "Fields cannot be empty"
-                    });
+                    return badRequest;
                 }
 
                 var passwordHash = _passwordHasher.HashPassword(null, request.Password);
@@ -68,34 +61,54 @@ namespace EDA.Gateway.Controllers
 
                 if (keyExists)
                 {
-                    return GetResult(result);
+                    return GetResult<SignUpResponsePayload>(result);
                 }
 
                 await _producer.SendMessageAsync(Topics.SignUpRequest, key, value);
 
                 result = await _redis.WaitForKeyAsync(key, true);
 
-                return GetResult(result);
+                return GetResult<SignUpResponsePayload>(result);
             }
             catch (Exception ex)
             {
 
-                return StatusCode((int)HttpStatusCode.InternalServerError, new UiSignUpResponse
+                return StatusCode((int)HttpStatusCode.InternalServerError, new UiSignUpResponse<SignUpResponsePayload>
                 {
                     ErrorMessage = "Internal Server Error"
                 });
             }
         }
 
-        [NonAction]
-        private IActionResult GetResult(string response)
+        private bool IsInvalidRequest(UiSignUpRequest request, out IActionResult? badRequest)
         {
-            var result = new UiSignUpResponse();
+            var isInValidData =
+                string.IsNullOrEmpty(request.Name) ||
+                string.IsNullOrEmpty(request.Email) ||
+                string.IsNullOrEmpty(request.Password);
+
+            badRequest = null;
+
+            if (!isInValidData)
+            {
+                return false;
+            }
+
+            badRequest = BadRequest(new UiSignUpResponse<object>()
+            {
+                ErrorMessage = "Fields cannot be empty"
+            });
+            return true;
+        }
+
+        private IActionResult GetResult<T>(string response)
+        {
+            var result = new UiSignUpResponse<T>();
             int status = (int)HttpStatusCode.InternalServerError;
 
             try
             {
-                var res = JsonConvert.DeserializeObject<SignUpResponseMessage>(response);
+                var res = JsonConvert.DeserializeObject<ResponseMessage<T>>(response);
                 if (res == null)
                 {
                     result.ErrorMessage = "Failed to deserialize response: returned null.";
@@ -103,7 +116,7 @@ namespace EDA.Gateway.Controllers
                 else
                 {
                     status = (int)res.Status;
-                    result.UserId = res.UserId;
+                    result.Payload = res.Payload;
                     result.ErrorMessage = res.ExceptionMessage;
                 }
             }

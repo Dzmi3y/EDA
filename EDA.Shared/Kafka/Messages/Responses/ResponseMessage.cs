@@ -2,9 +2,9 @@
 
 namespace EDA.Shared.Kafka.Messages.Responses
 {
-    public class SignUpResponseMessage : MessageBase
+    public class ResponseMessage<T>:MessageBase
     {
-        public string UserId { get; set; } = string.Empty;
+        public T Payload { get; set; }
         public HttpStatusCode Status { get; set; }
         public string ExceptionMessage { get; set; } = string.Empty;
     }
