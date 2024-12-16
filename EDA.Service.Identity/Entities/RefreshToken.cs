@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using EDA.Service.Identity.Entities.Base;
+﻿using EDA.Service.Identity.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace EDA.Service.Identity.Entities

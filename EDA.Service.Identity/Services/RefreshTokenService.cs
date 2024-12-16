@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EDA.Service.Identity.Services
 {
-    public class RefreshTokenService: IRefreshTokenService
+    public class RefreshTokenService : IRefreshTokenService
     {
         private readonly AppDbContext _db;
 

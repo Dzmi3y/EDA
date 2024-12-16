@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace EDA.Shared.Kafka.Messages.Requests
+﻿namespace EDA.Shared.Kafka.Messages.Requests
 {
     public class ProductPageRequestMessage : MessageBase
     {

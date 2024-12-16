@@ -12,7 +12,7 @@ namespace EDA.Shared.Kafka.Producer
             _producer = new ProducerBuilder<String, string>(config).Build();
         }
 
-        public async Task SendMessageAsync(Topics topic,string key, string message)
+        public async Task SendMessageAsync(Topics topic, string key, string message)
         {
             var msg = new Message<String, string>
             {

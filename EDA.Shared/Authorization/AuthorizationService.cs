@@ -9,7 +9,7 @@ namespace EDA.Shared.Authorization
     {
         private readonly ILogger<AuthorizationService> _logger;
 
-        public AuthorizationService( ILogger<AuthorizationService> logger)
+        public AuthorizationService(ILogger<AuthorizationService> logger)
         {
             _logger = logger;
         }
@@ -58,7 +58,7 @@ namespace EDA.Shared.Authorization
 
                 authUserInfo = GetUserInfo(jwtToken);
 
-                return authUserInfo!=null;
+                return authUserInfo != null;
             }
             catch
             {

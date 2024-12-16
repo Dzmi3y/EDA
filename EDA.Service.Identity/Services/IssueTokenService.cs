@@ -1,17 +1,17 @@
-﻿using EDA.Service.Identity.Settings;
+﻿using EDA.Service.Identity.Entities;
+using EDA.Service.Identity.Enums;
+using EDA.Service.Identity.Interfaces;
+using EDA.Service.Identity.Models;
+using EDA.Service.Identity.Settings;
+using EDA.Shared.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using EDA.Service.Identity.Entities;
-using EDA.Service.Identity.Models;
-using EDA.Service.Identity.Interfaces;
-using EDA.Service.Identity.Enums;
-using EDA.Shared.Authorization;
 
 namespace EDA.Service.Identity.Services
 {
-    public class IssueTokenService: IIssueTokenService
+    public class IssueTokenService : IIssueTokenService
     {
         private readonly JwtSettings _jwtSettings;
         private readonly IRefreshTokenService _refreshTokenService;
@@ -40,7 +40,7 @@ namespace EDA.Service.Identity.Services
             tokenDescriptor.Subject.AddClaim(new Claim(Claims.Id, user.Id.ToString()));
             tokenDescriptor.Subject.AddClaim(new Claim(Claims.Name, user.Name));
             tokenDescriptor.Subject.AddClaim(new Claim(Claims.Email, user.Email));
-            
+
 
             var accessToken = tokenHandler.CreateToken(tokenDescriptor);
             var refreshToken = await _refreshTokenService.CreateAsync(new RefreshTokenInfo

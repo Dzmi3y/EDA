@@ -1,16 +1,16 @@
 using Confluent.Kafka;
 using EDA.Service.Identity;
+using EDA.Service.Identity.EventHandlers;
 using EDA.Service.Identity.Interfaces;
 using EDA.Service.Identity.Services;
 using EDA.Service.Identity.Settings;
 using EDA.Shared.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
-using EDA.Service.Identity.EventHandlers;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Producer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 

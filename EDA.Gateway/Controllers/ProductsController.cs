@@ -19,7 +19,7 @@ namespace EDA.Gateway.Controllers
             _redis = redis;
         }
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]int size,int startIndex )
+        public async Task<IActionResult> Get([FromQuery] int size, int startIndex)
         {
             try
             {

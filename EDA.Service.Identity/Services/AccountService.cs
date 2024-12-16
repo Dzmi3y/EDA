@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EDA.Service.Identity.Services
 {
-    public class AccountService: IAccountService
+    public class AccountService : IAccountService
     {
         private readonly AppDbContext _db;
         private readonly IPasswordHasher<IUser> _passwordHasher;

@@ -1,6 +1,6 @@
 ﻿using EDA.Shared.Redis.Interfaces;
-using StackExchange.Redis;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace EDA.Shared.Redis.Services
 {
@@ -84,7 +84,7 @@ namespace EDA.Shared.Redis.Services
             var cancellationTokenSource = new CancellationTokenSource((TimeSpan)timeout);
             try
             {
-                Func<string, Task<(bool keyExists, string value)>> readFuncAsync = 
+                Func<string, Task<(bool keyExists, string value)>> readFuncAsync =
                     deleteAfterReading ? ReadAndDelete : ReadAsync;
 
                 while (!cancellationTokenSource.Token.IsCancellationRequested)

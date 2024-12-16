@@ -17,14 +17,14 @@ namespace EDA.Services.Catalog.Repositories
             return await _products.CountDocumentsAsync(Builders<Product>.Filter.Empty);
         }
 
-        public async Task<IEnumerable<Product>> GetListAsync(int pageSize,int pageNumber)
+        public async Task<IEnumerable<Product>> GetListAsync(int pageSize, int pageNumber)
         {
             var filter = Builders<Product>.Filter.Empty;
 
             return await _products.Find(filter)
                 .Skip((pageNumber - 1) * pageSize)
                 .Limit(pageSize)
-                .ToListAsync(); 
+                .ToListAsync();
         }
 
         public async Task<Product> GetByIdAsync(string id)

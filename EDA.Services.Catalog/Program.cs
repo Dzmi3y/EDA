@@ -3,7 +3,6 @@ using EDA.Services.Catalog;
 using EDA.Services.Catalog.EventHandlers;
 using EDA.Services.Catalog.Repositories;
 using EDA.Shared.Kafka.Consumer;
-using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Producer;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;

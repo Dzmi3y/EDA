@@ -1,5 +1,4 @@
 ﻿using EDA.Services.Catalog.Data;
-using MongoDB.Bson;
 
 namespace EDA.Services.Catalog.Repositories
 {
@@ -7,9 +6,9 @@ namespace EDA.Services.Catalog.Repositories
     {
         Task<long> GetProductCountAsync();
         Task<IEnumerable<Product>> GetListAsync(int pageSize, int pageNumber);
-        Task<Product> GetByIdAsync(string id); 
-        Task AddAsync(Product product); 
-        Task UpdateAsync(Product product); 
+        Task<Product> GetByIdAsync(string id);
+        Task AddAsync(Product product);
+        Task UpdateAsync(Product product);
         Task DeleteAsync(string id);
         Task InitializeProductsAsync();
     }

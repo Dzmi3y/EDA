@@ -2,7 +2,7 @@
 
 namespace EDA.Shared.Kafka.Messages.Responses
 {
-    public class ResponseMessage<T>:MessageBase
+    public class ResponseMessage<T> : MessageBase
     {
         public T Payload { get; set; }
         public HttpStatusCode Status { get; set; }

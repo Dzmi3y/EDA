@@ -5,7 +5,7 @@ using EDA.Shared.Redis.Interfaces;
 
 namespace EDA.Gateway.EventHandlers
 {
-    public class ProductResponseEventHandler: KafkaConsumerBase
+    public class ProductResponseEventHandler : KafkaConsumerBase
     {
         private readonly IRedisStringsService _redis;
         public ProductResponseEventHandler(IRedisStringsService redis, KafkaConsumerBaseConfig config,

@@ -1,9 +1,9 @@
 ﻿
+using EDA.Service.Identity.Entities;
+using EDA.Service.Identity.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-using EDA.Service.Identity.Entities;
-using EDA.Service.Identity.Entities.Base;
 
 namespace EDA.Service.Identity
 {

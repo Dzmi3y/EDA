@@ -2,7 +2,7 @@
 
 namespace EDA.Shared.DTOs
 {
-    public class SignUpUserDto: IUser
+    public class SignUpUserDto : IUser
     {
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;

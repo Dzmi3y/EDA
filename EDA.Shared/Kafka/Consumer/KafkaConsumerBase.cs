@@ -17,20 +17,20 @@ namespace EDA.Shared.Kafka.Consumer
             _consumer = new ConsumerBuilder<string, string>(config).Build();
             _topic = topic;
             _logger = logger;
-            _config= config;
+            _config = config;
         }
 
         private async Task TryToStartConsuming(CancellationToken stoppingToken)
         {
-             int maxRetryCount = _config.MaxRetryCount;
-             int baseDelayMilliseconds = _config.BaseDelayMilliseconds;
+            int maxRetryCount = _config.MaxRetryCount;
+            int baseDelayMilliseconds = _config.BaseDelayMilliseconds;
 
             for (var i = 0; i < maxRetryCount; i++)
             {
                 try
                 {
                     await Task.Run(() => StartConsuming(stoppingToken, (Topics)_topic), stoppingToken);
-                    return; 
+                    return;
                 }
                 catch (ConsumeException ex)
                 {
@@ -39,7 +39,7 @@ namespace EDA.Shared.Kafka.Consumer
                     if (i == maxRetryCount - 1)
                     {
                         _logger.LogError("Max retry attempts reached. Throwing exception.");
-                        throw; 
+                        throw;
                     }
 
                     var delay = baseDelayMilliseconds * Math.Pow(2, i);
