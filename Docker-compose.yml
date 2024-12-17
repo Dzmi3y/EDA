@@ -6,6 +6,14 @@ services:
       dockerfile: ./EDA.Services.Catalog/Dockerfile
     depends_on:
       - eda_kafka
+      - eda_postgres_user
+  eda_identity:
+    container_name: identity
+    build:
+      context: ./
+      dockerfile: ./EDA.Services.Identity/Dockerfile
+    depends_on:
+      - eda_kafka
       - eda_mongo
   eda_gateway:
     container_name: gateway

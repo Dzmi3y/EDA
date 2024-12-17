@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Pictures", "EDA.Picture
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Services.Basket", "EDA.Services.Basket\EDA.Services.Basket.csproj", "{484C9DE7-EDD4-40E0-BE2C-3BAB87FFCA29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Service.Identity", "EDA.Service.Identity\EDA.Service.Identity.csproj", "{9D3D26B9-3DF2-454B-8627-0E902E919549}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDA.Services.Identity", "EDA.Services.Identity\EDA.Services.Identity.csproj", "{9D3D26B9-3DF2-454B-8627-0E902E919549}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
