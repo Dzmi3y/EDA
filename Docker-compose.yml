@@ -94,6 +94,8 @@ services:
     image: provectuslabs/kafka-ui:latest
     ports:
       - 8084:8080
+    depends_on:
+      - eda_kafka
     environment:
       DYNAMIC_CONFIG_ENABLED: true
 # DB
