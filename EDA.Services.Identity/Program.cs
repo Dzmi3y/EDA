@@ -1,9 +1,9 @@
 using Confluent.Kafka;
 using EDA.Service.Identity;
-using EDA.Service.Identity.EventHandlers;
 using EDA.Service.Identity.Interfaces;
 using EDA.Service.Identity.Services;
 using EDA.Service.Identity.Settings;
+using EDA.Services.Identity.EventHandlers;
 using EDA.Shared.Authorization;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Producer;

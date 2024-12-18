@@ -1,15 +1,14 @@
 ﻿using EDA.Gateway.Contracts.Requests;
 using EDA.Gateway.Contracts.Responses;
+using EDA.Gateway.Helpers;
 using EDA.Shared.Authorization;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
-using EDA.Shared.Kafka.Messages.Responses;
 using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
@@ -32,55 +31,66 @@ namespace EDA.Gateway.Controllers
         }
 
         [HttpPost("signup")]
-        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(UiSignUpResponse<SignUpResponsePayload>))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(UiSignUpResponse<SignUpResponsePayload>))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(UiSignUpResponse<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(UiResponse<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(UiResponse<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(UiResponse<SignUpResponsePayload>))]
         public async Task<IActionResult> SignUp([FromBody] UiSignUpRequest request)
         {
             try
             {
-                if (IsInvalidRequest(request, out var badRequest))
+                int statusCodeResult = (int)(HttpStatusCode.OK);
+                object? resultValue = null;
+
+                if (IsSignUpDataInvalid(request, out var badRequest))
                 {
                     return badRequest;
                 }
 
-                var passwordHash = _passwordHasher.HashPassword(null, request.Password);
-                var key = Guid.NewGuid().ToString();
-
-                var signUpRequestMessage = new SignUpRequestMessage
-                {
-                    Email = request.Email,
-                    Name = request.Name,
-                    PasswordHash = passwordHash
-                };
-
-                var value = signUpRequestMessage.ToString();
+                (string key, string signUpRequestMessage) = CreateSignUpMessage(request);
 
 
-                (bool keyExists, string result) = await _redis.ReadAsync(key);
+                (bool keyExists, string redisResponse) = await _redis.ReadAsync(key);
 
                 if (keyExists)
                 {
-                    return GetResult<SignUpResponsePayload>(result);
+                    (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<SignUpResponsePayload>(redisResponse);
+
+                    return StatusCode(statusCodeResult, resultValue);
                 }
 
-                await _producer.SendMessageAsync(Topics.SignUpRequest, key, value);
+                await _producer.SendMessageAsync(Topics.SignUpRequest, key, signUpRequestMessage);
 
-                result = await _redis.WaitForKeyAsync(key, true);
+                redisResponse = await _redis.WaitForKeyAsync(key, true);
+                (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<SignUpResponsePayload>(redisResponse);
 
-                return GetResult<SignUpResponsePayload>(result);
+                return StatusCode(statusCodeResult, resultValue);
             }
             catch (Exception ex)
             {
-
-                return StatusCode((int)HttpStatusCode.InternalServerError, new UiSignUpResponse<SignUpResponsePayload>
+                return StatusCode((int)HttpStatusCode.InternalServerError, new UiResponse<SignUpResponsePayload>
                 {
                     ErrorMessage = "Internal Server Error"
                 });
             }
         }
 
-        private bool IsInvalidRequest(UiSignUpRequest request, out IActionResult? badRequest)
+        private (string key, string message) CreateSignUpMessage(UiSignUpRequest request)
+        {
+            var passwordHash = _passwordHasher.HashPassword(null, request.Password);
+            var key = Guid.NewGuid().ToString();
+
+            var signUpRequestMessage = new SignUpRequestMessage
+            {
+                Email = request.Email,
+                Name = request.Name,
+                PasswordHash = passwordHash
+            };
+
+            string message = signUpRequestMessage.ToString();
+            return (key, message);
+        }
+
+        private bool IsSignUpDataInvalid(UiSignUpRequest request, out IActionResult? badRequest)
         {
             var isInValidData =
                 string.IsNullOrEmpty(request.Name) ||
@@ -94,42 +104,11 @@ namespace EDA.Gateway.Controllers
                 return false;
             }
 
-            badRequest = BadRequest(new UiSignUpResponse<object>()
+            badRequest = BadRequest(new UiResponse<object>()
             {
                 ErrorMessage = "Fields cannot be empty"
             });
             return true;
-        }
-
-        private IActionResult GetResult<T>(string response)
-        {
-            var result = new UiSignUpResponse<T>();
-            int status = (int)HttpStatusCode.InternalServerError;
-
-            try
-            {
-                var res = JsonConvert.DeserializeObject<ResponseMessage<T>>(response);
-                if (res == null)
-                {
-                    result.ErrorMessage = "Failed to deserialize response: returned null.";
-                }
-                else
-                {
-                    status = (int)res.Status;
-                    result.Payload = res.Payload;
-                    result.ErrorMessage = res.ExceptionMessage;
-                }
-            }
-            catch (JsonSerializationException ex)
-            {
-                result.ErrorMessage = "Error deserializing response.";
-            }
-            catch (Exception ex)
-            {
-                result.ErrorMessage = "Unexpected error during deserialization.";
-            }
-
-            return StatusCode(status, result);
         }
 
 
