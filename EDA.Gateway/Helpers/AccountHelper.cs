@@ -1,7 +1,7 @@
 ﻿using EDA.Gateway.Contracts.Responses;
+using EDA.Shared.Kafka.Messages.Responses;
 using Newtonsoft.Json;
 using System.Net;
-using EDA.Shared.Kafka.Messages.Responses;
 
 namespace EDA.Gateway.Helpers
 {
@@ -9,7 +9,7 @@ namespace EDA.Gateway.Helpers
     {
         public static (int statusCode, object? value) DeserializeResponse<T>(string response)
         {
-            var result = new UiResponse<T>();
+            var result = new Response<T>();
             int status = (int)HttpStatusCode.InternalServerError;
 
             try
@@ -17,7 +17,7 @@ namespace EDA.Gateway.Helpers
                 var res = JsonConvert.DeserializeObject<ResponseMessage<T>>(response);
                 if (res == null)
                 {
-                    result.ErrorMessage = "Failed to deserialize response: returned null.";
+                    result.ErrorMessage = Resource.DeserializationFailedNull;
                 }
                 else
                 {
@@ -28,11 +28,11 @@ namespace EDA.Gateway.Helpers
             }
             catch (JsonSerializationException ex)
             {
-                result.ErrorMessage = "Error deserializing response.";
+                result.ErrorMessage = Resource.DeserializationFailedResponse;
             }
             catch (Exception ex)
             {
-                result.ErrorMessage = "Unexpected error during deserialization.";
+                result.ErrorMessage = Resource.DeserializationFailedUnexpected;
             }
 
             return (status, result);

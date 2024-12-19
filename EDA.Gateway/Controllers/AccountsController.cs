@@ -31,23 +31,17 @@ namespace EDA.Gateway.Controllers
         }
 
         [HttpPost("signup")]
-        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(UiResponse<SignUpResponsePayload>))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(UiResponse<SignUpResponsePayload>))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(UiResponse<SignUpResponsePayload>))]
-        public async Task<IActionResult> SignUp([FromBody] UiSignUpRequest request)
+        [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(Response<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(Response<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(Response<SignUpResponsePayload>))]
+        public async Task<IActionResult> SignUp([FromBody] SignUpRequest request)
         {
             try
             {
                 int statusCodeResult = (int)(HttpStatusCode.OK);
                 object? resultValue = null;
 
-                if (IsSignUpDataInvalid(request, out var badRequest))
-                {
-                    return badRequest;
-                }
-
                 (string key, string signUpRequestMessage) = CreateSignUpMessage(request);
-
 
                 (bool keyExists, string redisResponse) = await _redis.ReadAsync(key);
 
@@ -67,14 +61,14 @@ namespace EDA.Gateway.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new UiResponse<SignUpResponsePayload>
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Response<SignUpResponsePayload>
                 {
-                    ErrorMessage = "Internal Server Error"
+                    ErrorMessage = Resource.ServerError
                 });
             }
         }
 
-        private (string key, string message) CreateSignUpMessage(UiSignUpRequest request)
+        private (string key, string message) CreateSignUpMessage(SignUpRequest request)
         {
             var passwordHash = _passwordHasher.HashPassword(null, request.Password);
             var key = Guid.NewGuid().ToString();
@@ -90,31 +84,14 @@ namespace EDA.Gateway.Controllers
             return (key, message);
         }
 
-        private bool IsSignUpDataInvalid(UiSignUpRequest request, out IActionResult? badRequest)
-        {
-            var isInValidData =
-                string.IsNullOrEmpty(request.Name) ||
-                string.IsNullOrEmpty(request.Email) ||
-                string.IsNullOrEmpty(request.Password);
-
-            badRequest = null;
-
-            if (!isInValidData)
-            {
-                return false;
-            }
-
-            badRequest = BadRequest(new UiResponse<object>()
-            {
-                ErrorMessage = "Fields cannot be empty"
-            });
-            return true;
-        }
-
-
         [HttpPost("signin")]
-        public IActionResult SignIn([FromBody] string username)
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(Response<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(Response<SignUpResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(Response<SignUpResponsePayload>))]
+        public IActionResult SignIn([FromBody] SignInRequest request)
         {
+
+
             return Ok();
         }
     }

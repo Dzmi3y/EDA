@@ -6,10 +6,10 @@ using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses;
+using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 using EDA.Shared.Kafka.Producer;
 using Newtonsoft.Json;
 using System.Net;
-using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 
 namespace EDA.Services.Identity.EventHandlers
 {
