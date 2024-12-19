@@ -1,4 +1,4 @@
-﻿namespace EDA.Service.Identity.Enums
+﻿namespace EDA.Services.Identity.Enums
 {
     public enum IdentityErrorCode
     {

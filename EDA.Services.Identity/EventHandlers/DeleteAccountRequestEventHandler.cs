@@ -1,4 +1,4 @@
-﻿namespace EDA.Service.Identity.EventHandlers
+﻿namespace EDA.Services.Identity.EventHandlers
 {
     public class DeleteAccountRequestEventHandler
     {

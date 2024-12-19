@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using EDA.Service.Identity.Interfaces;
+using EDA.Services.Identity.Interfaces;
 using EDA.Shared.DTOs;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;

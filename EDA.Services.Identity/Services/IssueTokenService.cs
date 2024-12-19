@@ -1,15 +1,15 @@
-﻿using EDA.Service.Identity.Entities;
-using EDA.Service.Identity.Enums;
-using EDA.Service.Identity.Interfaces;
-using EDA.Service.Identity.Models;
-using EDA.Service.Identity.Settings;
+﻿using EDA.Services.Identity.Entities;
+using EDA.Services.Identity.Enums;
+using EDA.Services.Identity.Interfaces;
+using EDA.Services.Identity.Models;
+using EDA.Services.Identity.Settings;
 using EDA.Shared.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace EDA.Service.Identity.Services
+namespace EDA.Services.Identity.Services
 {
     public class IssueTokenService : IIssueTokenService
     {

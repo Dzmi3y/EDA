@@ -1,8 +1,7 @@
-﻿using EDA.Service.Identity.Entities.Base;
+﻿using EDA.Services.Identity.Entities.Base;
 using System.ComponentModel.DataAnnotations;
 
-
-namespace EDA.Service.Identity.Entities
+namespace EDA.Services.Identity.Entities
 {
     public class RefreshToken : AuditableEntity
     {

@@ -21,13 +21,15 @@ namespace EDA.Gateway.Controllers
         private readonly IKafkaProducer _producer;
         private readonly IRedisStringsService _redis;
         private readonly IPasswordHasher<IUser> _passwordHasher;
+        private readonly PasswordEncryptionConfig _passwordEncryptionConfig;
 
         public AccountsController(IKafkaProducer producer, IRedisStringsService redis,
-            IPasswordHasher<IUser> passwordHasher)
+            IPasswordHasher<IUser> passwordHasher, PasswordEncryptionConfig passwordEncryptionConfig)
         {
             _producer = producer;
             _redis = redis;
             _passwordHasher = passwordHasher;
+            _passwordEncryptionConfig = passwordEncryptionConfig;
         }
 
         [HttpPost("signup")]
@@ -88,13 +90,14 @@ namespace EDA.Gateway.Controllers
 
         private (string key, string message) CreateSignInMessage(SignInRequest request)
         {
-            var passwordHash = _passwordHasher.HashPassword(null, request.Password);
+            string encryptionKey = _passwordEncryptionConfig.Key;
+            var encryptedPassword = EncryptionHelper.Encrypt(request.Password, encryptionKey);
             var key = Guid.NewGuid().ToString();
 
             var signUpRequestMessage = new SignInRequestMessage
             {
                 Email = request.Email,
-                PasswordHash = passwordHash
+                EncryptedPassword = encryptedPassword
             };
 
             string message = signUpRequestMessage.ToString();

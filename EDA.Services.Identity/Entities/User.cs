@@ -1,9 +1,8 @@
-﻿using EDA.Service.Identity.Entities.Base;
+﻿using EDA.Services.Identity.Entities.Base;
 using EDA.Shared.Authorization;
 using System.ComponentModel.DataAnnotations;
 
-
-namespace EDA.Service.Identity.Entities
+namespace EDA.Services.Identity.Entities
 {
     public class User : AuditableEntity, IUser
     {

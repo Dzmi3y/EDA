@@ -1,9 +1,9 @@
-﻿using EDA.Service.Identity.Entities;
-using EDA.Service.Identity.Interfaces;
-using EDA.Service.Identity.Models;
+﻿using EDA.Services.Identity.Entities;
+using EDA.Services.Identity.Interfaces;
+using EDA.Services.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EDA.Service.Identity.Services
+namespace EDA.Services.Identity.Services
 {
     public class RefreshTokenService : IRefreshTokenService
     {

@@ -1,7 +1,7 @@
-﻿using EDA.Service.Identity.Entities;
-using EDA.Service.Identity.Models;
+﻿using EDA.Services.Identity.Entities;
+using EDA.Services.Identity.Models;
 
-namespace EDA.Service.Identity.Interfaces
+namespace EDA.Services.Identity.Interfaces
 {
     public interface IIssueTokenService
     {

@@ -1,11 +1,10 @@
-﻿
-using EDA.Service.Identity.Entities;
-using EDA.Service.Identity.Entities.Base;
+﻿using EDA.Services.Identity.Entities;
+using EDA.Services.Identity.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace EDA.Service.Identity
+namespace EDA.Services.Identity
 {
     public class AppDbContext : DbContext
     {

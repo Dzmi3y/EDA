@@ -1,4 +1,4 @@
-﻿namespace EDA.Service.Identity.Entities.Base
+﻿namespace EDA.Services.Identity.Entities.Base
 {
     public abstract class AuditableEntity
     {

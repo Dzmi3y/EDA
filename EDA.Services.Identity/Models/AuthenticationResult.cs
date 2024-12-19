@@ -1,6 +1,6 @@
-﻿using EDA.Service.Identity.Enums;
+﻿using EDA.Services.Identity.Enums;
 
-namespace EDA.Service.Identity.Models
+namespace EDA.Services.Identity.Models
 {
     public class AuthenticationResult
     {

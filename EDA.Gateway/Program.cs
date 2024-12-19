@@ -1,5 +1,6 @@
 using Confluent.Kafka;
 using EDA.Gateway.EventHandlers;
+using EDA.Shared.Authorization;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis;
@@ -23,6 +24,9 @@ builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<ProducerConfig>>().Value);
 builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 
+var passwordEncryptionConfig = new PasswordEncryptionConfig();
+builder.Configuration.Bind(nameof(PasswordEncryptionConfig), passwordEncryptionConfig);
+builder.Services.AddSingleton(passwordEncryptionConfig);
 
 builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
 builder.Services.AddSingleton(resolver =>

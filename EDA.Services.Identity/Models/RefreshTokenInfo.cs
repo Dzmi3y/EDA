@@ -1,4 +1,4 @@
-﻿namespace EDA.Service.Identity.Models
+﻿namespace EDA.Services.Identity.Models
 {
     public class RefreshTokenInfo
     {
