@@ -38,30 +38,32 @@ namespace EDA.Gateway.Controllers
         {
             try
             {
-                int statusCodeResult = (int)(HttpStatusCode.OK);
-                object? resultValue = null;
-
                 (string key, string signUpRequestMessage) = CreateSignUpMessage(request);
-
-                (bool keyExists, string redisResponse) = await _redis.ReadAsync(key);
-
-                if (keyExists)
-                {
-                    (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<SignUpResponsePayload>(redisResponse);
-
-                    return StatusCode(statusCodeResult, resultValue);
-                }
-
-                await _producer.SendMessageAsync(Topics.SignUpRequest, key, signUpRequestMessage);
-
-                redisResponse = await _redis.WaitForKeyAsync(key, true);
-                (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<SignUpResponsePayload>(redisResponse);
-
-                return StatusCode(statusCodeResult, resultValue);
+                return await GetResponse<SignUpResponsePayload>(key, signUpRequestMessage, Topics.SignUpRequest);
             }
             catch (Exception ex)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, new Response<SignUpResponsePayload>
+                {
+                    ErrorMessage = Resource.ServerError
+                });
+            }
+        }
+
+        [HttpPost("signin")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(Response<SignInResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(Response<SignInResponsePayload>))]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(Response<SignInResponsePayload>))]
+        public async Task<IActionResult> SignIn([FromBody] SignInRequest request)
+        {
+            try
+            {
+                (string key, string signInRequestMessage) = CreateSignInMessage(request);
+                return await GetResponse<SignInResponsePayload>(key, signInRequestMessage, Topics.SignInRequest);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Response<SignInResponsePayload>
                 {
                     ErrorMessage = Resource.ServerError
                 });
@@ -84,15 +86,51 @@ namespace EDA.Gateway.Controllers
             return (key, message);
         }
 
-        [HttpPost("signin")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(Response<SignUpResponsePayload>))]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(Response<SignUpResponsePayload>))]
-        [SwaggerResponse((int)HttpStatusCode.InternalServerError, Type = typeof(Response<SignUpResponsePayload>))]
-        public IActionResult SignIn([FromBody] SignInRequest request)
+        private (string key, string message) CreateSignInMessage(SignInRequest request)
         {
+            var passwordHash = _passwordHasher.HashPassword(null, request.Password);
+            var key = Guid.NewGuid().ToString();
 
+            var signUpRequestMessage = new SignInRequestMessage
+            {
+                Email = request.Email,
+                PasswordHash = passwordHash
+            };
 
-            return Ok();
+            string message = signUpRequestMessage.ToString();
+            return (key, message);
+        }
+
+        private async Task<IActionResult> GetResponse<T>(string key, string signUpRequestMessage, Topics topic)
+        {
+            try
+            {
+                int statusCodeResult = (int)(HttpStatusCode.OK);
+                object? resultValue = null;
+
+                (bool keyExists, string redisResponse) = await _redis.ReadAsync(key);
+
+                if (keyExists)
+                {
+                    (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<T>(redisResponse);
+
+                    return StatusCode(statusCodeResult, resultValue);
+                }
+
+                await _producer.SendMessageAsync(topic, key, signUpRequestMessage);
+
+                redisResponse = await _redis.WaitForKeyAsync(key, true);
+                (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<T>(redisResponse);
+
+                return StatusCode(statusCodeResult, resultValue);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Response<T>
+                {
+                    ErrorMessage = Resource.ServerError
+                });
+            }
         }
     }
 }
