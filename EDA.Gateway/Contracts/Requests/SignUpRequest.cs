@@ -12,11 +12,11 @@ namespace EDA.Gateway.Contracts.Requests
 
         [Required(ErrorMessageResourceName = "FieldRequiredError", ErrorMessageResourceType = typeof(Resource))]
         [MinLength(1, ErrorMessageResourceName = "FieldEmptyError", ErrorMessageResourceType = typeof(Resource))]
+        [PasswordComplexity(ErrorMessageResourceName = "ErrorPasswordValidationTotal", ErrorMessageResourceType = typeof(Resource))]
         public string Password { get; set; }
 
         [Required(ErrorMessageResourceName = "FieldRequiredError", ErrorMessageResourceType = typeof(Resource))]
         [MinLength(1, ErrorMessageResourceName = "FieldEmptyError", ErrorMessageResourceType = typeof(Resource))]
-        [PasswordComplexity(ErrorMessageResourceName = "ErrorPasswordValidationTotal", ErrorMessageResourceType = typeof(Resource))]
         public string Name { get; set; }
     }
 }

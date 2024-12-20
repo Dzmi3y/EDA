@@ -5,7 +5,6 @@ namespace EDA.Shared.Authorization
 {
     public class EncryptionHelper
     {
-
         public static string Encrypt(string plainText, string key)
         {
             using Aes aesAlg = Aes.Create();

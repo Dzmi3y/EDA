@@ -1,4 +1,4 @@
-﻿namespace EDA.Shared.DTOs
+﻿namespace EDA.Services.Identity.DTOs
 {
     public class SignInUserDto
     {

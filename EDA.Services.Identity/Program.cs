@@ -43,6 +43,7 @@ builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaConsumerBaseConfig>>().Value);
 
 builder.Services.AddHostedService<SignUpRequestEventHandler>();
+builder.Services.AddHostedService<SignInRequestEventHandler>();
 
 var app = builder.Build();
 

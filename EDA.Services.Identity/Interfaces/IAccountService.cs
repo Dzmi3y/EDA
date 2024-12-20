@@ -1,6 +1,6 @@
-﻿using EDA.Services.Identity.Entities;
+﻿using EDA.Services.Identity.DTOs;
+using EDA.Services.Identity.Entities;
 using EDA.Services.Identity.Models;
-using EDA.Shared.DTOs;
 
 namespace EDA.Services.Identity.Interfaces
 {

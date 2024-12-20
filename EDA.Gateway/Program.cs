@@ -40,6 +40,7 @@ builder.Services.AddSingleton(resolver =>
 
 builder.Services.AddHostedService<ProductResponseEventHandler>();
 builder.Services.AddHostedService<SignUpResponseEventHandler>();
+builder.Services.AddHostedService<SignInResponseEventHandler>();
 
 var app = builder.Build();
 

@@ -1,10 +1,9 @@
 ﻿using EDA.Services.Identity.Entities.Base;
-using EDA.Shared.Authorization;
 using System.ComponentModel.DataAnnotations;
 
 namespace EDA.Services.Identity.Entities
 {
-    public class User : AuditableEntity, IUser
+    public class User : AuditableEntity
     {
         [Key]
         public Guid Id { get; set; }

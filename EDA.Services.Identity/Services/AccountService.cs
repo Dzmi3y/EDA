@@ -1,8 +1,7 @@
-﻿using EDA.Services.Identity.Entities;
+﻿using EDA.Services.Identity.DTOs;
+using EDA.Services.Identity.Entities;
 using EDA.Services.Identity.Interfaces;
 using EDA.Services.Identity.Models;
-using EDA.Shared.Authorization;
-using EDA.Shared.DTOs;
 using EDA.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +11,11 @@ namespace EDA.Services.Identity.Services
     public class AccountService : IAccountService
     {
         private readonly AppDbContext _db;
-        private readonly IPasswordHasher<IUser> _passwordHasher;
+        private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IIssueTokenService _issueTokenService;
         private readonly IRefreshTokenService _refreshTokenService;
         public AccountService(AppDbContext db, IIssueTokenService issueTokenService,
-            IRefreshTokenService refreshTokenService, IPasswordHasher<IUser> passwordHasher)
+            IRefreshTokenService refreshTokenService, IPasswordHasher<User> passwordHasher)
         {
             _db = db;
             _passwordHasher = passwordHasher;
@@ -36,12 +35,14 @@ namespace EDA.Services.Identity.Services
             if (existing != null)
                 throw new UserException("User already exists");
 
+            var passwordHash = _passwordHasher.HashPassword(null, userDto.Password);
+
             var newUser = new User
             {
                 Id = Guid.NewGuid(),
                 Email = userDto.Email,
                 Name = userDto.Name,
-                PasswordHash = userDto.PasswordHash
+                PasswordHash = passwordHash
             };
 
             return newUser;
@@ -63,7 +64,6 @@ namespace EDA.Services.Identity.Services
 
             if (user == null)
                 throw new UserException("User does not exist");
-
 
             var passwordVerifyResult = _passwordHasher.VerifyHashedPassword(null, user.PasswordHash, userDto.Password);
             if (passwordVerifyResult == PasswordVerificationResult.Failed)

@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
+using EDA.Services.Identity.DTOs;
 using EDA.Services.Identity.Interfaces;
-using EDA.Shared.DTOs;
+using EDA.Shared.Authorization;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
@@ -18,14 +19,17 @@ namespace EDA.Services.Identity.EventHandlers
         private readonly ILogger<SignUpRequestEventHandler> _logger;
         private readonly IKafkaProducer _producer;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly PasswordEncryptionConfig _passwordEncryptionConfig;
+
         public SignUpRequestEventHandler(KafkaConsumerBaseConfig config,
             ILogger<SignUpRequestEventHandler> logger, IServiceScopeFactory scopeFactory,
-            IKafkaProducer producer)
+            IKafkaProducer producer, PasswordEncryptionConfig passwordEncryptionConfig)
             : base(config, Topics.SignUpRequest, logger)
         {
             _logger = logger;
             _producer = producer;
             _scopeFactory = scopeFactory;
+            _passwordEncryptionConfig = passwordEncryptionConfig;
         }
 
         protected override async Task HandleAsync(ConsumeResult<string, string> result)
@@ -33,6 +37,7 @@ namespace EDA.Services.Identity.EventHandlers
             var responseMessage = new ResponseMessage<SignUpResponsePayload>();
             try
             {
+                var encryptionKey = _passwordEncryptionConfig.Key;
                 var message = JsonConvert.DeserializeObject<SignUpRequestMessage>(result.Message.Value);
 
                 if (message == null)
@@ -48,9 +53,8 @@ namespace EDA.Services.Identity.EventHandlers
                 {
                     Email = message.Email,
                     Name = message.Name,
-                    PasswordHash = message.PasswordHash
+                    Password = EncryptionHelper.Decrypt(message.EncryptedPassword, encryptionKey)
                 });
-
 
                 var stringUserId = userId.ToString();
 

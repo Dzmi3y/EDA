@@ -5,12 +5,12 @@ using EDA.Shared.Redis.Interfaces;
 
 namespace EDA.Gateway.EventHandlers
 {
-    public class SignInResponseEventHandler : KafkaConsumerBase
+    public class SignUpResponseEventHandler : KafkaConsumerBase
     {
         private readonly IRedisStringsService _redis;
-        public SignInResponseEventHandler(IRedisStringsService redis, KafkaConsumerBaseConfig config,
+        public SignUpResponseEventHandler(IRedisStringsService redis, KafkaConsumerBaseConfig config,
             ILogger<ProductResponseEventHandler> logger)
-            : base(config, Topics.SignInResponse, logger)
+            : base(config, Topics.SignUpResponse, logger)
         {
             _redis = redis;
         }
