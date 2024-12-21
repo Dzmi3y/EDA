@@ -55,7 +55,7 @@ namespace EDA.Services.Identity.EventHandlers
                     Password = EncryptionHelper.Decrypt(message.EncryptedPassword, encryptionKey)
                 });
 
-                responseMessage.Status = HttpStatusCode.Created;
+                responseMessage.Status = HttpStatusCode.OK;
                 responseMessage.Payload = new SignInResponsePayload()
                 {
                     AccessToken = authenticationResult.AccessToken,

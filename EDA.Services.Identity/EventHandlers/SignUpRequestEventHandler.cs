@@ -66,8 +66,6 @@ namespace EDA.Services.Identity.EventHandlers
                 {
                     UserId = stringUserId
                 };
-
-
             }
             catch (UserException userEx)
             {

@@ -59,7 +59,7 @@ namespace EDA.Services.Identity.EventHandlers
                 var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
                 var authenticationResult = await accountService.RefreshAsync(refreshToken);
 
-                responseMessage.Status = HttpStatusCode.Created;
+                responseMessage.Status = HttpStatusCode.OK;
                 responseMessage.Payload = new SignInResponsePayload()
                 {
                     AccessToken = authenticationResult.AccessToken,
