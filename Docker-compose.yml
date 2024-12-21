@@ -6,7 +6,7 @@ services:
       dockerfile: ./EDA.Services.Catalog/Dockerfile
     depends_on:
       - eda_kafka
-      - eda_postgres_user
+      - eda_mongo
   eda_identity:
     container_name: identity
     build:
@@ -14,7 +14,7 @@ services:
       dockerfile: ./EDA.Services.Identity/Dockerfile
     depends_on:
       - eda_kafka
-      - eda_mongo
+      - eda_postgres_user
   eda_gateway:
     container_name: gateway
     build:
@@ -75,29 +75,10 @@ services:
       KAFKA_JMX_HOSTNAME: kafka
     volumes: 
       - kafka-data:/kafka
-    command: >
-      sh -c "
-      /etc/confluent/docker/run &
-      while ! nc -z localhost 9092; do
-        echo 'Waiting for Kafka to start...';
-        sleep 1;
-      done;
-      kafka-topics --create --topic ProductPageResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic ProductPageRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic SignUpRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic SignUpResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic SignInRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic SignInResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      
-      kafka-topics --create --topic SignOutRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic SignOutResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic TokenRefreshRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic TokenRefreshResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic DeleteAccountRequest --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      kafka-topics --create --topic DeleteAccountResponse --partitions 1 --replication-factor 1 --config retention.ms=1800000 --bootstrap-server localhost:9092 &&
-      echo 'Topics created successfully';
-      sleep infinity "
-
+      - ./EDA.Shared/Kafka/Scripts/create-topics.sh:/scripts/create-topics.sh 
+    command: > 
+        sh -c " /etc/confluent/docker/run &
+        bash /scripts/create-topics.sh"
   eda_kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
