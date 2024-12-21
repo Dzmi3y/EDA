@@ -2,10 +2,10 @@
 using EDA.Services.Identity.DTOs;
 using EDA.Services.Identity.Interfaces;
 using EDA.Shared.Authorization;
+using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
-using EDA.Shared.Kafka.Messages;
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses;
 using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
@@ -54,7 +54,7 @@ namespace EDA.Services.Identity.EventHandlers
                     Email = message.Email,
                     Password = EncryptionHelper.Decrypt(message.EncryptedPassword, encryptionKey)
                 });
-                
+
                 responseMessage.Status = HttpStatusCode.Created;
                 responseMessage.Payload = new SignInResponsePayload()
                 {

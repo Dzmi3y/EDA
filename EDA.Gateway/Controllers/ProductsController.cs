@@ -2,6 +2,7 @@
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EDA.Gateway.Controllers
@@ -19,6 +20,7 @@ namespace EDA.Gateway.Controllers
             _redis = redis;
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get([FromQuery] int size, int startIndex)
         {
             try

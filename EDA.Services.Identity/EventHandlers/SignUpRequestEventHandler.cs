@@ -2,6 +2,7 @@
 using EDA.Services.Identity.DTOs;
 using EDA.Services.Identity.Interfaces;
 using EDA.Shared.Authorization;
+using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;

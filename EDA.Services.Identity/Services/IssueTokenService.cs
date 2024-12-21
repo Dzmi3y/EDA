@@ -2,8 +2,8 @@
 using EDA.Services.Identity.Enums;
 using EDA.Services.Identity.Interfaces;
 using EDA.Services.Identity.Models;
-using EDA.Services.Identity.Settings;
 using EDA.Shared.Authorization;
+using EDA.Shared.Authorization.Settings;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

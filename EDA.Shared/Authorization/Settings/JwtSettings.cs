@@ -1,4 +1,4 @@
-﻿namespace EDA.Services.Identity.Settings
+﻿namespace EDA.Shared.Authorization.Settings
 {
     public class JwtSettings
     {

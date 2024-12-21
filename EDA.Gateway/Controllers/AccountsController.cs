@@ -2,6 +2,7 @@
 using EDA.Gateway.Contracts.Responses;
 using EDA.Gateway.Helpers;
 using EDA.Shared.Authorization;
+using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;

@@ -1,4 +1,4 @@
-﻿namespace EDA.Shared.Authorization
+﻿namespace EDA.Shared.Authorization.Settings
 {
     public class PasswordEncryptionConfig
     {
