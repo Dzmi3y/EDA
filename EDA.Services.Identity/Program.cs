@@ -46,9 +46,7 @@ builder.Services.AddHostedService<SignUpRequestEventHandler>();
 builder.Services.AddHostedService<SignInRequestEventHandler>();
 builder.Services.AddHostedService<TokenRefreshRequestEventHandler>();
 builder.Services.AddHostedService<SignOutRequestEventHandler>();
-
-
-
+builder.Services.AddHostedService<DeleteAccountRequestEventHandler>();
 
 var app = builder.Build();
 

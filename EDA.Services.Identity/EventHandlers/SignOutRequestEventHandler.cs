@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using EDA.Services.Identity.Interfaces;
-using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
@@ -20,7 +19,7 @@ namespace EDA.Services.Identity.EventHandlers
         private readonly IServiceScopeFactory _scopeFactory;
         public SignOutRequestEventHandler(KafkaConsumerBaseConfig config,
             ILogger<SignOutRequestEventHandler> logger, IServiceScopeFactory scopeFactory,
-            IKafkaProducer producer, PasswordEncryptionConfig passwordEncryptionConfig)
+            IKafkaProducer producer)
             : base(config, Topics.SignOutRequest, logger)
         {
             _logger = logger;

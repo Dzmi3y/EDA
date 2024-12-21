@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using EDA.Services.Identity.Interfaces;
-using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Exceptions;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
@@ -20,8 +19,8 @@ namespace EDA.Services.Identity.EventHandlers
         private readonly IServiceScopeFactory _scopeFactory;
         public TokenRefreshRequestEventHandler(KafkaConsumerBaseConfig config,
             ILogger<TokenRefreshRequestEventHandler> logger, IServiceScopeFactory scopeFactory,
-            IKafkaProducer producer, PasswordEncryptionConfig passwordEncryptionConfig)
-            : base(config, Topics.SignInRequest, logger)
+            IKafkaProducer producer)
+            : base(config, Topics.TokenRefreshRequest, logger)
         {
             _logger = logger;
             _producer = producer;
@@ -49,7 +48,7 @@ namespace EDA.Services.Identity.EventHandlers
                     responseMessage.ExceptionMessage = "Invalid refresh token";
                     responseMessage.Status = HttpStatusCode.BadRequest;
 
-                    await _producer.SendMessageAsync(Topics.SignInResponse,
+                    await _producer.SendMessageAsync(Topics.TokenRefreshResponse,
                        result.Message.Key, responseMessage.ToString());
                     return;
                 }
@@ -80,7 +79,7 @@ namespace EDA.Services.Identity.EventHandlers
             }
             finally
             {
-                await _producer.SendMessageAsync(Topics.SignInResponse,
+                await _producer.SendMessageAsync(Topics.TokenRefreshResponse,
                     result.Message.Key, responseMessage.ToString());
             }
         }
