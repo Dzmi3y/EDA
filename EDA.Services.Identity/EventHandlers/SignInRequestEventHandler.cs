@@ -17,12 +17,12 @@ namespace EDA.Services.Identity.EventHandlers
 {
     public class SignInRequestEventHandler : KafkaConsumerBase
     {
-        private readonly ILogger<SignUpRequestEventHandler> _logger;
+        private readonly ILogger<SignInRequestEventHandler> _logger;
         private readonly IKafkaProducer _producer;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly PasswordEncryptionConfig _passwordEncryptionConfig;
         public SignInRequestEventHandler(KafkaConsumerBaseConfig config,
-            ILogger<SignUpRequestEventHandler> logger, IServiceScopeFactory scopeFactory,
+            ILogger<SignInRequestEventHandler> logger, IServiceScopeFactory scopeFactory,
             IKafkaProducer producer, PasswordEncryptionConfig passwordEncryptionConfig)
             : base(config, Topics.SignInRequest, logger)
         {

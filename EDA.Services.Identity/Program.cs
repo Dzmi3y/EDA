@@ -44,6 +44,9 @@ builder.Services.AddSingleton(resolver =>
 
 builder.Services.AddHostedService<SignUpRequestEventHandler>();
 builder.Services.AddHostedService<SignInRequestEventHandler>();
+builder.Services.AddHostedService<TokenRefreshRequestEventHandler>();
+
+
 
 var app = builder.Build();
 
