@@ -80,3 +80,4 @@ namespace EDA.Services.Identity.EventHandlers
 
         }
     }
+}

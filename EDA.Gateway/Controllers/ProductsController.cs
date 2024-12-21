@@ -20,7 +20,6 @@ namespace EDA.Gateway.Controllers
             _redis = redis;
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Get([FromQuery] int size, int startIndex)
         {
             try
