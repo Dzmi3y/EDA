@@ -2,7 +2,6 @@
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EDA.Gateway.Controllers
