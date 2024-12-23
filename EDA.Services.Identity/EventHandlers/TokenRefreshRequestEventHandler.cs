@@ -29,7 +29,7 @@ namespace EDA.Services.Identity.EventHandlers
 
         protected override async Task HandleAsync(ConsumeResult<string, string> result)
         {
-            var responseMessage = new ResponseMessage<SignInResponsePayload>();
+            var responseMessage = new ResponseMessage<TokenRefreshResponsePayload>();
             try
             {
                 var message = JsonConvert.DeserializeObject<TokenRefreshRequestMessage>(result.Message.Value);
@@ -59,7 +59,7 @@ namespace EDA.Services.Identity.EventHandlers
                 var authenticationResult = await accountService.RefreshAsync(refreshToken);
 
                 responseMessage.Status = HttpStatusCode.OK;
-                responseMessage.Payload = new SignInResponsePayload()
+                responseMessage.Payload = new TokenRefreshResponsePayload()
                 {
                     AccessToken = authenticationResult.AccessToken,
                     ExpiresIn = authenticationResult.ExpiresIn,

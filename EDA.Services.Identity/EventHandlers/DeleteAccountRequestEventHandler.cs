@@ -30,7 +30,7 @@ namespace EDA.Services.Identity.EventHandlers
 
         protected override async Task HandleAsync(ConsumeResult<string, string> result)
         {
-            var responseMessage = new ResponseMessage<SignInResponsePayload>();
+            var responseMessage = new ResponseMessage<object>();
             try
             {
                 var message = JsonConvert.DeserializeObject<DeleteAccountRequestMessage>(result.Message.Value);
@@ -59,7 +59,7 @@ namespace EDA.Services.Identity.EventHandlers
                 var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
                 await accountService.DeleteAccountAsync(userId);
 
-                responseMessage.Status = HttpStatusCode.OK;
+                responseMessage.Status = HttpStatusCode.NoContent;
             }
             catch (UserException userEx)
             {

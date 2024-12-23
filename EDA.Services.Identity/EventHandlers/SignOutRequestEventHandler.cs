@@ -29,7 +29,7 @@ namespace EDA.Services.Identity.EventHandlers
 
         protected override async Task HandleAsync(ConsumeResult<string, string> result)
         {
-            var responseMessage = new ResponseMessage<SignInResponsePayload>();
+            var responseMessage = new ResponseMessage<object>();
             try
             {
                 var message = JsonConvert.DeserializeObject<SignOutRequestMessage>(result.Message.Value);
