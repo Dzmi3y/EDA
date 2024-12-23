@@ -8,11 +8,14 @@ using EDA.Shared.Redis.Interfaces;
 using EDA.Shared.Redis.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using EDA.Gateway.Extensions;
+using EDA.Shared.Kafka.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,9 +103,17 @@ builder.Services.Configure<KafkaConsumerBaseConfig>(builder.Configuration.GetSec
 builder.Services.AddSingleton(resolver =>
     resolver.GetRequiredService<IOptions<KafkaConsumerBaseConfig>>().Value);
 
-builder.Services.AddHostedService<ProductResponseEventHandler>();
-builder.Services.AddHostedService<SignUpResponseEventHandler>();
-builder.Services.AddHostedService<SignInResponseEventHandler>();
+Topics[] topics = new Topics[]
+{
+    Topics.ProductPageResponse,
+    Topics.SignUpResponse,
+    Topics.SignInResponse,
+    Topics.SignOutResponse,
+    Topics.TokenRefreshResponse,
+    Topics.DeleteAccountResponse,
+};
+
+builder.Services.AddKafkaToRedisHostedServices(topics);
 
 var app = builder.Build();
 
