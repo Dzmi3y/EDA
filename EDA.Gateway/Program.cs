@@ -1,21 +1,19 @@
 using Confluent.Kafka;
-using EDA.Gateway.EventHandlers;
+using EDA.Gateway.Extensions;
 using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Kafka.Consumer;
+using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis;
 using EDA.Shared.Redis.Interfaces;
 using EDA.Shared.Redis.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using EDA.Gateway.Extensions;
-using EDA.Shared.Kafka.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 

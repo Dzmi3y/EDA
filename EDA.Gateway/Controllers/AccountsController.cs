@@ -8,10 +8,10 @@ using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 using EDA.Shared.Kafka.Producer;
 using EDA.Shared.Redis.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using Microsoft.AspNetCore.Authorization;
 
 namespace EDA.Gateway.Controllers
 {
@@ -202,11 +202,12 @@ namespace EDA.Gateway.Controllers
         }
 
         private (string key, string message) CreateDeleteAccountMessage(string userId)
-        {var key = Guid.NewGuid().ToString();
+        {
+            var key = Guid.NewGuid().ToString();
 
             var signOutRequestMessage = new DeleteAccountRequestMessage
             {
-            
+
                 UserId = userId
             };
 
