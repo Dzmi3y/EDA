@@ -1,5 +1,6 @@
 import React from "react";
+import { Container } from "./styles";
 
 export const Catalog = () => {
-  return <div>Catalog</div>;
+  return <Container>Catalog</Container>;
 };
