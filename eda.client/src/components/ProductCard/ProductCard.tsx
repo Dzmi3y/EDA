@@ -8,7 +8,6 @@ import {
   StyledImage,
   Title,
 } from "./styles";
-import testImage from "../../assets/images/testImg.png";
 
 export const ProductCard = () => {
   const buttonAnimationSettings = {
@@ -17,10 +16,12 @@ export const ProductCard = () => {
   };
   return (
     <Container>
-      <StyledImage src={testImage} />
+      <StyledImage src={"http://localhost:83/images/products/e1.png"} />
       <InfoContainer>
         <Title>Product Name</Title>
         <Price>10$</Price>
+      </InfoContainer>
+      <InfoContainer>
         <Description>Description</Description>
         <StyledButton {...buttonAnimationSettings}>Buy</StyledButton>
       </InfoContainer>
