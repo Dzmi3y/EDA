@@ -15,7 +15,7 @@ namespace EDA.Gateway.Extensions
                 {
                     var redis = provider.GetRequiredService<IRedisStringsService>();
                     var config = provider.GetRequiredService<KafkaConsumerBaseConfig>();
-                    var logger = provider.GetRequiredService<ILogger<ProductResponseEventHandler>>();
+                    var logger = provider.GetRequiredService<ILogger<KafkaToRedisEventHandler>>();
                     return new KafkaToRedisEventHandler(redis, config, logger, topic);
                 });
             }

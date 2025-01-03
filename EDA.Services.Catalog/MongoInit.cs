@@ -1,4 +1,4 @@
-﻿using EDA.Services.Catalog.Data;
+﻿using EDA.Shared.Data;
 
 namespace EDA.Services.Catalog
 {

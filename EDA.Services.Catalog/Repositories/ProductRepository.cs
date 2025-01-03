@@ -1,4 +1,4 @@
-﻿using EDA.Services.Catalog.Data;
+﻿using EDA.Shared.Data;
 using MongoDB.Driver;
 
 namespace EDA.Services.Catalog.Repositories
@@ -54,7 +54,7 @@ namespace EDA.Services.Catalog.Repositories
             if (productCount == 0)
             {
                 var initialProducts = MongoInit.GetProducts();
-                await _products.InsertManyAsync(initialProducts);
+                await _products.InsertManyAsync((IEnumerable<Product>)initialProducts);
             }
         }
     }

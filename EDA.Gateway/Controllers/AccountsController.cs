@@ -17,17 +17,13 @@ namespace EDA.Gateway.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AccountsController : ControllerBase
+    public class AccountsController : EDAControllerBase
     {
-        private readonly IKafkaProducer _producer;
-        private readonly IRedisStringsService _redis;
         private readonly PasswordEncryptionConfig _passwordEncryptionConfig;
 
         public AccountsController(IKafkaProducer producer, IRedisStringsService redis,
-            PasswordEncryptionConfig passwordEncryptionConfig)
+            PasswordEncryptionConfig passwordEncryptionConfig):base(producer, redis)
         {
-            _producer = producer;
-            _redis = redis;
             _passwordEncryptionConfig = passwordEncryptionConfig;
         }
 
@@ -213,38 +209,6 @@ namespace EDA.Gateway.Controllers
 
             string message = signOutRequestMessage.ToString();
             return (key, message);
-        }
-
-        private async Task<IActionResult> GetResponse<T>(string key, string requestMessage, Topics topic)
-        {
-            try
-            {
-                int statusCodeResult = (int)(HttpStatusCode.OK);
-                object? resultValue = null;
-
-                (bool keyExists, string redisResponse) = await _redis.ReadAsync(key);
-
-                if (keyExists)
-                {
-                    (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<T>(redisResponse);
-
-                    return StatusCode(statusCodeResult, resultValue);
-                }
-
-                await _producer.SendMessageAsync(topic, key, requestMessage);
-
-                redisResponse = await _redis.WaitForKeyAsync(key, true);
-                (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<T>(redisResponse);
-
-                return StatusCode(statusCodeResult, resultValue);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new Response<T>
-                {
-                    ErrorMessage = Resource.ServerError
-                });
-            }
         }
     }
 }

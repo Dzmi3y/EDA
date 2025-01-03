@@ -9,7 +9,7 @@ namespace EDA.Gateway.EventHandlers
     {
         private readonly IRedisStringsService _redis;
         public KafkaToRedisEventHandler(IRedisStringsService redis, KafkaConsumerBaseConfig config,
-            ILogger<ProductResponseEventHandler> logger, Topics topic)
+            ILogger<KafkaToRedisEventHandler> logger, Topics topic)
             : base(config, topic, logger)
         {
             _redis = redis;

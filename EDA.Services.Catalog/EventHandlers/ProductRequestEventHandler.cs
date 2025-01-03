@@ -3,6 +3,7 @@ using EDA.Services.Catalog.Repositories;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
+using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
 using EDA.Shared.Kafka.Producer;
 using MongoDB.Bson;
 using Newtonsoft.Json;
@@ -40,8 +41,13 @@ namespace EDA.Services.Catalog.EventHandlers
                 var productList = await _repository
                     .GetListAsync(message.PageSize, message.PageNumber);
 
+                var productResponsePayload = new ProductResponsePayload()
+                {
+                    Products = productList
+                };
+
                 await _producer.SendMessageAsync(Topics.ProductPageResponse,
-                     result.Message.Key, productList.ToJson());
+                     result.Message.Key, productResponsePayload.ToJson());
             }
             catch (Exception ex)
             {

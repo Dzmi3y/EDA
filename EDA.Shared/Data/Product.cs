@@ -1,4 +1,4 @@
-﻿namespace EDA.Services.Catalog.Data
+﻿namespace EDA.Shared.Data
 {
     public class Product
     {
@@ -18,7 +18,7 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
-        public Decimal Price { get; set; }
+        public decimal Price { get; set; }
         public int Count { get; set; }
     }
 }
