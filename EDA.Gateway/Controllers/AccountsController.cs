@@ -1,6 +1,5 @@
 ﻿using EDA.Gateway.Contracts.Requests;
 using EDA.Gateway.Contracts.Responses;
-using EDA.Gateway.Helpers;
 using EDA.Shared.Authorization;
 using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Kafka.Enums;
@@ -22,7 +21,7 @@ namespace EDA.Gateway.Controllers
         private readonly PasswordEncryptionConfig _passwordEncryptionConfig;
 
         public AccountsController(IKafkaProducer producer, IRedisStringsService redis,
-            PasswordEncryptionConfig passwordEncryptionConfig):base(producer, redis)
+            PasswordEncryptionConfig passwordEncryptionConfig) : base(producer, redis)
         {
             _passwordEncryptionConfig = passwordEncryptionConfig;
         }

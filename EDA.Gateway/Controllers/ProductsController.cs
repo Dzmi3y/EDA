@@ -1,7 +1,4 @@
-﻿using EDA.Gateway.Contracts.Requests;
-using EDA.Gateway.Contracts.Responses;
-using EDA.Shared.Authorization.Settings;
-using EDA.Shared.Authorization;
+﻿using EDA.Gateway.Contracts.Responses;
 using EDA.Shared.Kafka.Enums;
 using EDA.Shared.Kafka.Messages.Requests;
 using EDA.Shared.Kafka.Messages.Responses.ResponsePayloads;
@@ -35,7 +32,7 @@ namespace EDA.Gateway.Controllers
                 var key = message.ToKeyString();
                 var value = message.ToString();
 
-                return await GetResponse<ProductResponsePayload>(key, value, Topics.ProductPageRequest);
+                return await GetResponse<ProductResponsePayload>(key, value, Topics.ProductPageRequest, false);
             }
             catch (Exception ex)
             {

@@ -8,7 +8,7 @@ using System.Net;
 
 namespace EDA.Gateway.Controllers
 {
-    public class EDAControllerBase: ControllerBase
+    public class EDAControllerBase : ControllerBase
     {
         protected readonly IKafkaProducer _producer;
         protected readonly IRedisStringsService _redis;
@@ -18,7 +18,7 @@ namespace EDA.Gateway.Controllers
             _producer = producer;
             _redis = redis;
         }
-        protected async Task<IActionResult> GetResponse<T>(string key, string requestMessage, Topics topic)
+        protected async Task<IActionResult> GetResponse<T>(string key, string requestMessage, Topics topic, bool deleteRedisMessage = true)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace EDA.Gateway.Controllers
 
                 await _producer.SendMessageAsync(topic, key, requestMessage);
 
-                redisResponse = await _redis.WaitForKeyAsync(key, true);
+                redisResponse = await _redis.WaitForKeyAsync(key, deleteRedisMessage);
                 (statusCodeResult, resultValue) = AccountHelper.DeserializeResponse<T>(redisResponse);
 
                 return StatusCode(statusCodeResult, resultValue);

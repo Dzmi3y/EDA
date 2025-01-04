@@ -113,6 +113,12 @@ Topics[] topics = new Topics[]
 
 builder.Services.AddKafkaToRedisHostedServices(topics);
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowSpecificOrigin", builder => builder.WithOrigins("http://localhost:59473/")
+        .AllowAnyMethod() 
+        .AllowAnyHeader() 
+        .AllowCredentials()); });
+
 var app = builder.Build();
 
 if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
