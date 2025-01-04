@@ -1,9 +1,10 @@
-import { Product } from "../Data/Product";
+import { ProductPayload } from "../Data/ProductPayload";
+import { ResponseBase } from "../Data/ResponseBAse";
 
 export const getProducts = async (
   size: number,
   startIndex: number
-): Promise<Product[]> => {
+): Promise<ResponseBase<ProductPayload>> => {
   const response = await fetch(
     `api/products?size=${size}&startIndex=${startIndex}`
   );

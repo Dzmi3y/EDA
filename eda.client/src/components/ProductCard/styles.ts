@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { motion } from "motion/react";
 
-export const Container = styled.div`
+export const Container = styled(motion.div)`
   font-size: 1.4rem;
   margin-top: 50px;
   padding-top: 10px;
@@ -21,25 +21,36 @@ export const StyledImage = styled(motion.img)`
 `;
 export const InfoContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   padding-left: 20px;
   padding-right: 20px;
 `;
-export const Title = styled.p``;
-export const Price = styled.p`
-  width: 100px;
+export const Title = styled.p`
+  padding-left: 20px;
+  padding-right: 20px;
   text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;
-export const Description = styled.p``;
+
+export const Description = styled.p`
+  text-align: center;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  min-height: 2rem;
+`;
 export const StyledButton = styled(motion.button)`
   background: none;
   box-shadow: none;
   color: var(--secondary-color);
   padding: 0;
   border: 1px solid var(--secondary-color);
-  margin: 0;
+  margin: 0 0 1rem 0;
   cursor: pointer;
   height: 50px;
-  width: 100px;
+  min-width: 150px;
 `;
