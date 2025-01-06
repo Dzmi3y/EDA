@@ -6,13 +6,14 @@ import {
 } from "./styles";
 import elephant from "../../assets/images/elephant.svg";
 import cart from "../../assets/images/cart.svg";
-import account from "../../assets/images/account.svg";
+import AccountDialog from "../AccountDialog/AccountDialog";
 
 const Header = () => {
   const buttonAnimationSettings = {
     whileHover: { scale: 1.1 },
     whileTap: { scale: 0.95 },
   };
+
   return (
     <RootContainer>
       <HeaderContainer>
@@ -20,9 +21,7 @@ const Header = () => {
         <img src={elephant} alt="logo" />
         <h1>Shop</h1>
         <IconsGroupDiv>
-          <MotionButton {...buttonAnimationSettings}>
-            <img src={account} alt="account" width={50} />
-          </MotionButton>
+          <AccountDialog />
           <MotionButton {...buttonAnimationSettings}>
             <img
               style={{ marginTop: "8px" }}
