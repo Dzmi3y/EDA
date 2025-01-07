@@ -10,7 +10,7 @@ import AccountDialog from "../AccountDialog/AccountDialog";
 
 const Header = () => {
   const buttonAnimationSettings = {
-    whileHover: { scale: 1.1 },
+    whileHover: { scale: 1.2 },
     whileTap: { scale: 0.95 },
   };
 

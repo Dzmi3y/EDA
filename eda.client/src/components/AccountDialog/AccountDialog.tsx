@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { CloseButton, Container, Dialog, Header, IconButton } from "./styles";
 import account from "../../assets/images/account.svg";
+import { Authorization } from "../Authorization/Authorization";
 
 const AccountDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -15,7 +16,7 @@ const AccountDialog = () => {
   };
 
   const buttonAnimationSettings = {
-    whileHover: { scale: 1.1 },
+    whileHover: { scale: 1.2 },
     whileTap: { scale: 0.95 },
   };
 
@@ -43,6 +44,7 @@ const AccountDialog = () => {
               </CloseButton>
             </Header>
           </form>
+          <Authorization />
         </Container>
       </Dialog>
     </>
