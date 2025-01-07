@@ -10,7 +10,6 @@ export const StyledForm = styled.form`
 export const StyledInput = styled.input`
   border-radius: 2px;
   color: var(--secondary-color);
-  /* box-shadow: 2px 2px 10px 2px; */
   border: 1px solid rgba(0, 79, 68, 1);
   padding: 5px;
   margin: 1px 1px;
@@ -32,9 +31,4 @@ export const Button = styled(motion.button)`
   color: var(--primary-color);
   background-color: var(--secondary-color);
   box-shadow: 2px 2px 10px 2px var(--secondary-color);
-`;
-
-export const Title = styled.h2`
-  text-align: center;
-  margin: 0;
 `;

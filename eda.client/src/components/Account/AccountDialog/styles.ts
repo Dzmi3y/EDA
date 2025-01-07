@@ -41,3 +41,26 @@ export const Header = styled.div`
   display: flex;
   justify-content: end;
 `;
+
+export const Title = styled.h2`
+  text-align: center;
+  margin: 0;
+`;
+
+export const SwitchButton = styled.button`
+  background: none;
+  box-shadow: none;
+  border: 0;
+  margin: 1rem 0;
+  cursor: pointer;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  text-decoration: underline;
+
+  &:hover {
+    color: rgba(0, 79, 68, 0.7);
+  }
+  &:active {
+    color: rgba(0, 79, 68, 0.5);
+  }
+`;

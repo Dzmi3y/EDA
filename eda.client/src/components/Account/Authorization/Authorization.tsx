@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Button, StyledForm, StyledInput, Title } from "./styles";
+import { Button, StyledForm, StyledInput } from "../styles";
 
 export const Authorization = () => {
   const [login, setLogin] = useState("");
@@ -24,7 +24,6 @@ export const Authorization = () => {
   };
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <Title>Authorization</Title>
       <label htmlFor="login">Login</label>
       <StyledInput
         id="login"
@@ -44,7 +43,7 @@ export const Authorization = () => {
         onChange={handlePasswordChange}
       />
       <Button {...buttonSettings} type="submit">
-        Login
+        Sign In
       </Button>
     </StyledForm>
   );

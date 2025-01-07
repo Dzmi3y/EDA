@@ -1,11 +1,32 @@
-import { useEffect, useRef } from "react";
-import { CloseButton, Container, Dialog, Header, IconButton } from "./styles";
-import account from "../../assets/images/account.svg";
+import { useEffect, useRef, useState } from "react";
+import {
+  CloseButton,
+  Container,
+  Dialog,
+  Header,
+  IconButton,
+  SwitchButton,
+  Title,
+} from "./styles";
+import account from "../../../assets/images/account.svg";
 import { Authorization } from "../Authorization/Authorization";
+import { Registration } from "../Registration/Registration";
 
 const AccountDialog = () => {
+  const [isAuthorization, setIsAuthorization] = useState<boolean>(true);
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogContentRef = useRef<HTMLDivElement>(null);
+
+  const buttonSettings = {
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.95 },
+  };
+
+  const handleSwitchDialogButton = () => {
+    setIsAuthorization(!isAuthorization);
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dialogRef.current &&
@@ -44,7 +65,26 @@ const AccountDialog = () => {
               </CloseButton>
             </Header>
           </form>
-          <Authorization />
+
+          {isAuthorization && (
+            <>
+              <Title>Authorization</Title>
+              <SwitchButton onClick={handleSwitchDialogButton}>
+                to registration
+              </SwitchButton>
+              <Authorization />
+            </>
+          )}
+
+          {!isAuthorization && (
+            <>
+              <Title>Registration</Title>
+              <SwitchButton onClick={handleSwitchDialogButton}>
+                to authorization
+              </SwitchButton>
+              <Registration />
+            </>
+          )}
         </Container>
       </Dialog>
     </>

@@ -6,7 +6,7 @@ import {
 } from "./styles";
 import elephant from "../../assets/images/elephant.svg";
 import cart from "../../assets/images/cart.svg";
-import AccountDialog from "../AccountDialog/AccountDialog";
+import AccountDialog from "../Account/AccountDialog/AccountDialog";
 
 const Header = () => {
   const buttonAnimationSettings = {
