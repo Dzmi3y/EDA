@@ -3,7 +3,7 @@ import { ProductCard } from "../ProductCard/ProductCard";
 import { getProducts } from "../../services/ApiService";
 import { Product } from "../../Data/Product";
 import { useEffect, useState } from "react";
-import { ResponseBase } from "../../Data/ResponseBAse";
+import { ResponseBase } from "../../Data/ResponseBase";
 import { ProductPayload } from "../../Data/ProductPayload";
 
 export const Catalog = () => {

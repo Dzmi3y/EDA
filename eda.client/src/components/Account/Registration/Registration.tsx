@@ -1,10 +1,13 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Button, StyledForm, StyledInput } from "../styles";
+import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
+import { registration } from "../../../services/ApiService";
+import { RegistrationRequestData } from "../../../Data/RegistrationRequestData";
 
 export const Registration = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -21,12 +24,20 @@ export const Registration = () => {
     whileTap: { scale: 0.95 },
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Username:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    let requestData: RegistrationRequestData = {
+      email: email,
+      name: username,
+      password: password,
+    };
+
+    const response = await registration(requestData);
+    console.log(response.payload.userId);
+    setErrorMessage(response.errorMessage);
   };
+
   return (
     <StyledForm onSubmit={handleSubmit}>
       <label htmlFor="username">Username</label>
@@ -37,15 +48,17 @@ export const Registration = () => {
         placeholder="username"
         value={username}
         onChange={handleUsernameChange}
+        required
       />
       <label htmlFor="email">Email</label>
       <StyledInput
         id="email"
         name="email"
-        type="text"
+        type="email"
         placeholder="email"
         value={email}
         onChange={handleEmailChange}
+        required
       />
       <label htmlFor="password">Password</label>
       <StyledInput
@@ -55,7 +68,11 @@ export const Registration = () => {
         placeholder="password"
         value={password}
         onChange={handlePasswordChange}
+        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+        required
       />
+      {!!errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       <Button {...buttonSettings} type="submit">
         Sign Up
       </Button>

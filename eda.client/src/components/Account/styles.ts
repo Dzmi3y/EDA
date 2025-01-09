@@ -32,3 +32,10 @@ export const Button = styled(motion.button)`
   background-color: var(--secondary-color);
   box-shadow: 2px 2px 10px 2px var(--secondary-color);
 `;
+
+export const ErrorMessage = styled.div`
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: rgba(204, 57, 57);
+  font-weight: 600;
+`;

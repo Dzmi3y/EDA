@@ -32,6 +32,7 @@ export const Authorization = () => {
         placeholder="login"
         value={login}
         onChange={handleLoginChange}
+        required
       />
       <label htmlFor="password">Password</label>
       <StyledInput
@@ -41,6 +42,7 @@ export const Authorization = () => {
         placeholder="password"
         value={password}
         onChange={handlePasswordChange}
+        required
       />
       <Button {...buttonSettings} type="submit">
         Sign In
