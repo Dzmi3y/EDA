@@ -12,6 +12,7 @@ namespace EDA.Gateway.EventHandlers
             ILogger<KafkaToRedisEventHandler> logger, Topics topic)
             : base(config, topic, logger)
         {
+            Console.WriteLine("a");
             _redis = redis;
         }
 

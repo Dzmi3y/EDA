@@ -1,5 +1,7 @@
 using Confluent.Kafka;
+using EDA.Gateway.EventHandlers;
 using EDA.Gateway.Extensions;
+using EDA.Gateway.Services;
 using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Kafka.Consumer;
 using EDA.Shared.Kafka.Enums;
@@ -111,7 +113,14 @@ Topics[] topics = new Topics[]
     Topics.DeleteAccountResponse,
 };
 
-builder.Services.AddKafkaToRedisHostedServices(topics);
+builder.Services.AddHostedService(provider =>
+{
+    var redis = provider.GetRequiredService<IRedisStringsService>();
+    var config = provider.GetRequiredService<KafkaConsumerBaseConfig>();
+    var logger = provider.GetRequiredService<ILogger<KafkaToRedisEventHandler>>();
+    return new OrchestratorService(redis, config, logger, topics);
+});
+
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowSpecificOrigin", builder => builder.WithOrigins("http://localhost:59473/")
