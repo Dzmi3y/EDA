@@ -1,12 +1,15 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Button, StyledForm, StyledInput } from "../styles";
+import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
+import { AuthorizationRequestData } from "../../../Data/AuthorizationRequestData";
+import { authorization } from "../../../services/ApiService";
 
 export const Authorization = () => {
-  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleLoginChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setLogin(event.target.value);
+    setEmail(event.target.value);
   };
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -17,20 +20,29 @@ export const Authorization = () => {
     whileTap: { scale: 0.95 },
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Login:", login);
-    console.log("Password:", password);
+
+    let requestData: AuthorizationRequestData = {
+      email: email,
+      password: password,
+    };
+
+    const response = await authorization(requestData);
+    console.log(response.payload.accessToken);
+    console.log(response.payload.expiresIn);
+    console.log(response.payload.refreshToken);
+    setErrorMessage(response.errorMessage);
   };
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <label htmlFor="login">Login</label>
+      <label htmlFor="login">Email</label>
       <StyledInput
-        id="login"
-        name="login"
-        type="text"
-        placeholder="login"
-        value={login}
+        id="email"
+        name="email"
+        type="email"
+        placeholder="email"
+        value={email}
         onChange={handleLoginChange}
         required
       />
@@ -44,6 +56,7 @@ export const Authorization = () => {
         onChange={handlePasswordChange}
         required
       />
+      {!!errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       <Button {...buttonSettings} type="submit">
         Sign In
       </Button>

@@ -1,3 +1,5 @@
+import { AuthorizationPayload } from "../Data/AuthorizationPayload";
+import { AuthorizationRequestData } from "../Data/AuthorizationRequestData";
 import { ProductPayload } from "../Data/ProductPayload";
 import { RegistrationPayload } from "../Data/RegistrationPayload";
 import { RegistrationRequestData } from "../Data/RegistrationRequestData";
@@ -24,6 +26,25 @@ export const registration = async (
   console.log(requestData);
 
   const response = await fetch(`api/Accounts/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestData),
+  });
+
+  if (!response.ok && response.status !== 400) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const authorization = async (
+  requestData: AuthorizationRequestData
+): Promise<ResponseBase<AuthorizationPayload>> => {
+  console.log(JSON.stringify(requestData));
+  console.log(requestData);
+
+  const response = await fetch(`api/Accounts/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestData),
