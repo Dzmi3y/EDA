@@ -40,6 +40,7 @@ export const CloseButton = styled(motion.button)`
 export const Header = styled.div`
   display: flex;
   justify-content: end;
+  position: 4;
 `;
 
 export const Title = styled.h2`

@@ -2,12 +2,14 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
 import { registration } from "../../../services/ApiService";
 import { RegistrationRequestData } from "../../../Data/RegistrationRequestData";
+import LoadingPanda from "../../LoadingPanda/LoadingPanda";
 
 export const Registration = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false);
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -26,20 +28,31 @@ export const Registration = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsLoaderVisible(true);
+    setErrorMessage("");
     let requestData: RegistrationRequestData = {
       email: email,
       name: username,
       password: password,
     };
 
-    const response = await registration(requestData);
-    console.log(response.payload.userId);
-    setErrorMessage(response.errorMessage);
+    try {
+      const response = await registration(requestData);
+      console.log(response);
+      setErrorMessage(response.errorMessage);
+    } catch (e) {
+      setErrorMessage("Server error");
+      console.log(e);
+    }
+
+    setIsLoaderVisible(false);
   };
 
   return (
     <StyledForm onSubmit={handleSubmit}>
+      <div style={{ zIndex: 1 }}>
+        <LoadingPanda isVisible={isLoaderVisible} />
+      </div>
       <label htmlFor="username">Username</label>
       <StyledInput
         id="username"

@@ -2,11 +2,13 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
 import { AuthorizationRequestData } from "../../../Data/AuthorizationRequestData";
 import { authorization } from "../../../services/ApiService";
+import LoadingPanda from "../../LoadingPanda/LoadingPanda";
 
 export const Authorization = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false);
 
   const handleLoginChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -22,20 +24,30 @@ export const Authorization = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsLoaderVisible(true);
+    setErrorMessage("");
     let requestData: AuthorizationRequestData = {
       email: email,
       password: password,
     };
 
-    const response = await authorization(requestData);
-    console.log(response.payload.accessToken);
-    console.log(response.payload.expiresIn);
-    console.log(response.payload.refreshToken);
-    setErrorMessage(response.errorMessage);
+    try {
+      const response = await authorization(requestData);
+      console.log(response.payload.accessToken);
+      console.log(response.payload.expiresIn);
+      console.log(response.payload.refreshToken);
+      setErrorMessage(response.errorMessage);
+    } catch (e) {
+      setErrorMessage("Server error");
+    }
+
+    setIsLoaderVisible(false);
   };
   return (
     <StyledForm onSubmit={handleSubmit}>
+      <div style={{ zIndex: 1 }}>
+        <LoadingPanda isVisible={isLoaderVisible} />
+      </div>
       <label htmlFor="login">Email</label>
       <StyledInput
         id="email"

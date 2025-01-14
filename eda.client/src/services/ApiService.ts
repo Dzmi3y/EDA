@@ -5,6 +5,8 @@ import { RegistrationPayload } from "../Data/RegistrationPayload";
 import { RegistrationRequestData } from "../Data/RegistrationRequestData";
 import { ResponseBase } from "../Data/ResponseBase";
 
+const TIMEOUT: number = 8000;
+
 export const getProducts = async (
   size: number,
   startIndex: number
@@ -24,11 +26,11 @@ export const registration = async (
 ): Promise<ResponseBase<RegistrationPayload>> => {
   console.log(JSON.stringify(requestData));
   console.log(requestData);
-
   const response = await fetch(`api/Accounts/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestData),
+    signal: AbortSignal.timeout(TIMEOUT),
   });
 
   if (!response.ok && response.status !== 400) {
@@ -48,8 +50,9 @@ export const authorization = async (
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestData),
+    signal: AbortSignal.timeout(TIMEOUT),
   });
-
+  console.log(response);
   if (!response.ok && response.status !== 400) {
     throw new Error("Network response was not ok");
   }

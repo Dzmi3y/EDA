@@ -18,11 +18,6 @@ const AccountDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogContentRef = useRef<HTMLDivElement>(null);
 
-  const buttonSettings = {
-    whileHover: { scale: 1.02 },
-    whileTap: { scale: 0.95 },
-  };
-
   const handleSwitchDialogButton = () => {
     setIsAuthorization(!isAuthorization);
   };
@@ -65,26 +60,27 @@ const AccountDialog = () => {
               </CloseButton>
             </Header>
           </form>
+          <div style={{ position: "relative" }}>
+            {isAuthorization && (
+              <>
+                <Title>Authorization</Title>
+                <SwitchButton onClick={handleSwitchDialogButton}>
+                  to registration
+                </SwitchButton>
+                <Authorization />
+              </>
+            )}
 
-          {isAuthorization && (
-            <>
-              <Title>Authorization</Title>
-              <SwitchButton onClick={handleSwitchDialogButton}>
-                to registration
-              </SwitchButton>
-              <Authorization />
-            </>
-          )}
-
-          {!isAuthorization && (
-            <>
-              <Title>Registration</Title>
-              <SwitchButton onClick={handleSwitchDialogButton}>
-                to authorization
-              </SwitchButton>
-              <Registration />
-            </>
-          )}
+            {!isAuthorization && (
+              <>
+                <Title>Registration</Title>
+                <SwitchButton onClick={handleSwitchDialogButton}>
+                  to authorization
+                </SwitchButton>
+                <Registration />
+              </>
+            )}
+          </div>
         </Container>
       </Dialog>
     </>
