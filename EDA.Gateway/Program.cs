@@ -1,6 +1,5 @@
 using Confluent.Kafka;
 using EDA.Gateway.EventHandlers;
-using EDA.Gateway.Extensions;
 using EDA.Gateway.Services;
 using EDA.Shared.Authorization.Settings;
 using EDA.Shared.Kafka.Consumer;
