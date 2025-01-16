@@ -4,7 +4,9 @@ import { registration } from "../../../services/ApiService";
 import { RegistrationRequestData } from "../../../Data/RegistrationRequestData";
 import LoadingPanda from "../../LoadingPanda/LoadingPanda";
 
-export const Registration = () => {
+export const Registration: React.FC<{ closeDialogHandler: () => void }> = ({
+  closeDialogHandler,
+}) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +48,7 @@ export const Registration = () => {
     }
 
     setIsLoaderVisible(false);
+    closeDialogHandler();
   };
 
   return (

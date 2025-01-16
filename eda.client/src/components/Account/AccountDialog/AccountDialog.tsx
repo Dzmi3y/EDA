@@ -22,6 +22,10 @@ const AccountDialog = () => {
     setIsAuthorization(!isAuthorization);
   };
 
+  const closeDialogHandler: () => void = () => {
+    dialogRef.current?.close();
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dialogRef.current &&
@@ -67,7 +71,7 @@ const AccountDialog = () => {
                 <SwitchButton onClick={handleSwitchDialogButton}>
                   to registration
                 </SwitchButton>
-                <Authorization />
+                <Authorization closeDialogHandler={closeDialogHandler} />
               </>
             )}
 
@@ -77,7 +81,7 @@ const AccountDialog = () => {
                 <SwitchButton onClick={handleSwitchDialogButton}>
                   to authorization
                 </SwitchButton>
-                <Registration />
+                <Registration closeDialogHandler={closeDialogHandler} />
               </>
             )}
           </div>

@@ -4,7 +4,9 @@ import { AuthorizationRequestData } from "../../../Data/AuthorizationRequestData
 import { authorization } from "../../../services/ApiService";
 import LoadingPanda from "../../LoadingPanda/LoadingPanda";
 
-export const Authorization = () => {
+export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
+  closeDialogHandler,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,6 +44,7 @@ export const Authorization = () => {
     }
 
     setIsLoaderVisible(false);
+    closeDialogHandler();
   };
   return (
     <StyledForm onSubmit={handleSubmit}>
