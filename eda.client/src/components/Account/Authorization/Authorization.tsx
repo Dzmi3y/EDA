@@ -4,6 +4,7 @@ import { AuthorizationRequestData } from "../../../Data/requests/AuthorizationRe
 import { authorization } from "../../../services/ApiService";
 import LoadingPanda from "../../LoadingPanda/LoadingPanda";
 import { useAuth } from "../../../AuthProvider";
+import { AuthLocalStorageService } from "../../../services/AuthLocalStorageService";
 
 export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
   closeDialogHandler,
@@ -39,13 +40,10 @@ export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
     try {
       const response = await authorization(requestData);
 
-      const { accessToken, expiresIn, refreshToken } = response.payload;
-      console.log(accessToken);
-      console.log(expiresIn);
-      console.log(refreshToken);
-
       if (!response.errorMessage) {
         authData.updateAuthData(response.payload);
+        AuthLocalStorageService.setAuthData(response.payload);
+        closeDialogHandler();
       }
       setErrorMessage(response.errorMessage);
     } catch (e) {
@@ -53,7 +51,6 @@ export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
     }
 
     setIsLoaderVisible(false);
-    closeDialogHandler();
   };
   return (
     <StyledForm onSubmit={handleSubmit}>

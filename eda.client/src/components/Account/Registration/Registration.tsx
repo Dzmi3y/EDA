@@ -41,13 +41,15 @@ export const Registration: React.FC<{ closeDialogHandler: () => void }> = ({
     try {
       const response = await registration(requestData);
       console.log(response);
+      if (!response.errorMessage) {
+        closeDialogHandler();
+      }
       setErrorMessage(response.errorMessage);
     } catch (e) {
       setErrorMessage("Server error");
       console.log(e);
     }
     setIsLoaderVisible(false);
-    closeDialogHandler();
   };
 
   return (

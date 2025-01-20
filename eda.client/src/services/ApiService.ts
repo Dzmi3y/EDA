@@ -53,7 +53,10 @@ export const authorization = async (
     body: JSON.stringify(requestData),
     signal: AbortSignal.timeout(TIMEOUT),
   });
+
   console.log(response);
+  console.log(response.status);
+  console.log(response.statusText);
   if (!response.ok && response.status !== 400) {
     throw new Error("Network response was not ok");
   }
@@ -74,7 +77,7 @@ export const signout = async (
     signal: AbortSignal.timeout(TIMEOUT),
   });
   console.log(response);
-  if (!response.ok && response.status !== 400) {
+  if (!response.ok && response.status !== 401) {
     throw new Error("Network response was not ok");
   }
   const data = await response.json();

@@ -10,6 +10,7 @@ import logout from "../../assets/images/logout.svg";
 import AccountDialog from "../Account/AccountDialog/AccountDialog";
 import { useAuth } from "../../AuthProvider";
 import { signout } from "../../services/ApiService";
+import { AuthLocalStorageService } from "../../services/AuthLocalStorageService";
 
 const Header = () => {
   const buttonAnimationSettings = {
@@ -19,9 +20,17 @@ const Header = () => {
 
   const authData = useAuth();
 
+  if (!authData.accessToken) {
+    if (AuthLocalStorageService.isAuthDataPresent()) {
+      const auth = AuthLocalStorageService.getAuthData();
+      authData.updateAuthData(auth);
+    }
+  }
+
   const exitButtonClickHandler = async () => {
-    await signout({ refreshToken: authData.refreshToken });
     authData.updateAuthData(null);
+    AuthLocalStorageService.removeAuthData();
+    await signout({ refreshToken: authData.refreshToken });
   };
 
   return (
