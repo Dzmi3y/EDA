@@ -4,7 +4,7 @@ import { getProducts } from "../../services/ApiService";
 import { Product } from "../../Data/Product";
 import { useEffect, useState } from "react";
 import { ResponseBase } from "../../Data/ResponseBase";
-import { ProductPayload } from "../../Data/ProductPayload";
+import { ProductPayload } from "../../Data/payloads/ProductPayload";
 
 export const Catalog = () => {
   const [products, setProducts] = useState<Product[]>();

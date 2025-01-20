@@ -1,9 +1,10 @@
-import { AuthorizationPayload } from "../Data/AuthorizationPayload";
-import { AuthorizationRequestData } from "../Data/AuthorizationRequestData";
-import { ProductPayload } from "../Data/ProductPayload";
-import { RegistrationPayload } from "../Data/RegistrationPayload";
-import { RegistrationRequestData } from "../Data/RegistrationRequestData";
+import { AuthorizationPayload } from "../Data/payloads/AuthorizationPayload";
+import { AuthorizationRequestData } from "../Data/requests/AuthorizationRequestData";
+import { ProductPayload } from "../Data/payloads/ProductPayload";
+import { RegistrationPayload } from "../Data/payloads/RegistrationPayload";
+import { RegistrationRequestData } from "../Data/requests/RegistrationRequestData";
 import { ResponseBase } from "../Data/ResponseBase";
+import { SignOutRequestData } from "../Data/requests/SignOutRequestData";
 
 const TIMEOUT: number = 8000;
 
@@ -47,6 +48,26 @@ export const authorization = async (
   console.log(requestData);
 
   const response = await fetch(`api/Accounts/signin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestData),
+    signal: AbortSignal.timeout(TIMEOUT),
+  });
+  console.log(response);
+  if (!response.ok && response.status !== 400) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const signout = async (
+  requestData: SignOutRequestData
+): Promise<ResponseBase<string>> => {
+  console.log(JSON.stringify(requestData));
+  console.log(requestData);
+
+  const response = await fetch(`api/Accounts/signout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestData),

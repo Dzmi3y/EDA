@@ -1,8 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
-import { AuthorizationRequestData } from "../../../Data/AuthorizationRequestData";
+import { AuthorizationRequestData } from "../../../Data/requests/AuthorizationRequestData";
 import { authorization } from "../../../services/ApiService";
 import LoadingPanda from "../../LoadingPanda/LoadingPanda";
+import { useAuth } from "../../../AuthProvider";
 
 export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
   closeDialogHandler,
@@ -11,6 +12,8 @@ export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false);
+
+  const authData = useAuth();
 
   const handleLoginChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -35,9 +38,15 @@ export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
 
     try {
       const response = await authorization(requestData);
-      console.log(response.payload.accessToken);
-      console.log(response.payload.expiresIn);
-      console.log(response.payload.refreshToken);
+
+      const { accessToken, expiresIn, refreshToken } = response.payload;
+      console.log(accessToken);
+      console.log(expiresIn);
+      console.log(refreshToken);
+
+      if (!response.errorMessage) {
+        authData.updateAuthData(response.payload);
+      }
       setErrorMessage(response.errorMessage);
     } catch (e) {
       setErrorMessage("Server error");

@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
 import { registration } from "../../../services/ApiService";
-import { RegistrationRequestData } from "../../../Data/RegistrationRequestData";
+import { RegistrationRequestData } from "../../../Data/requests/RegistrationRequestData";
 import LoadingPanda from "../../LoadingPanda/LoadingPanda";
 
 export const Registration: React.FC<{ closeDialogHandler: () => void }> = ({
@@ -46,7 +46,6 @@ export const Registration: React.FC<{ closeDialogHandler: () => void }> = ({
       setErrorMessage("Server error");
       console.log(e);
     }
-
     setIsLoaderVisible(false);
     closeDialogHandler();
   };

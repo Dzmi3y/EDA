@@ -28,6 +28,7 @@ export const IconsGroupDiv = styled.div`
   gap: 1rem;
   align-items: center;
 `;
+
 export const HeaderContainer = styled.div`
   display: grid;
   grid-template-columns: 1.9fr 1fr 1fr 1fr;

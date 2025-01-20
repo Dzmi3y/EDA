@@ -3,13 +3,16 @@ import theme from "./theme";
 import { Container } from "./styles";
 import Header from "./components/Header/Header";
 import { Catalog } from "./components/Catalog/Catalog";
+import { AuthProvider } from "./AuthProvider";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Container>
-        <Header />
-        <Catalog />
-      </Container>
+      <AuthProvider>
+        <Container>
+          <Header />
+          <Catalog />
+        </Container>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
