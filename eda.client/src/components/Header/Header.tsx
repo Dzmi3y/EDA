@@ -11,6 +11,7 @@ import AccountDialog from "../Account/AccountDialog/AccountDialog";
 import { useAuth } from "../../AuthProvider";
 import { signout } from "../../services/ApiService";
 import { AuthLocalStorageService } from "../../services/AuthLocalStorageService";
+import CartDialog from "../Cart/CartDialog/CartDialog";
 
 const Header = () => {
   const buttonAnimationSettings = {
@@ -55,14 +56,7 @@ const Header = () => {
               />
             </MotionButton>
           )}
-          <MotionButton {...buttonAnimationSettings}>
-            <img
-              style={{ marginTop: "8px" }}
-              src={cart}
-              alt="cart"
-              width={50}
-            />
-          </MotionButton>
+          <CartDialog />
         </IconsGroupDiv>
       </HeaderContainer>
     </RootContainer>
