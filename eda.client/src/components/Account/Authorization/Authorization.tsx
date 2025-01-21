@@ -3,7 +3,7 @@ import { Button, ErrorMessage, StyledForm, StyledInput } from "../styles";
 import { AuthorizationRequestData } from "../../../Data/requests/AuthorizationRequestData";
 import { authorization } from "../../../services/ApiService";
 import LoadingPanda from "../../LoadingPanda/LoadingPanda";
-import { useAuth } from "../../../AuthProvider";
+import { useAppContext } from "../../../AppProvider";
 import { AuthLocalStorageService } from "../../../services/AuthLocalStorageService";
 
 export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
@@ -14,7 +14,7 @@ export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false);
 
-  const authData = useAuth();
+  const contextData = useAppContext();
 
   const handleLoginChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -41,7 +41,7 @@ export const Authorization: React.FC<{ closeDialogHandler: () => void }> = ({
       const response = await authorization(requestData);
 
       if (!response.errorMessage) {
-        authData.updateAuthData(response.payload);
+        contextData.updateAuthData(response.payload);
         AuthLocalStorageService.setAuthData(response.payload);
         closeDialogHandler();
       }

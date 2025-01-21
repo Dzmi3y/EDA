@@ -5,10 +5,9 @@ import {
   RootContainer,
 } from "./styles";
 import elephant from "../../assets/images/elephant.svg";
-import cart from "../../assets/images/cart.svg";
 import logout from "../../assets/images/logout.svg";
 import AccountDialog from "../Account/AccountDialog/AccountDialog";
-import { useAuth } from "../../AuthProvider";
+import { useAppContext } from "../../AppProvider";
 import { signout } from "../../services/ApiService";
 import { AuthLocalStorageService } from "../../services/AuthLocalStorageService";
 import CartDialog from "../Cart/CartDialog/CartDialog";
@@ -19,19 +18,19 @@ const Header = () => {
     whileTap: { scale: 0.95 },
   };
 
-  const authData = useAuth();
+  const contextData = useAppContext();
 
-  if (!authData.accessToken) {
+  if (!contextData.accessToken) {
     if (AuthLocalStorageService.isAuthDataPresent()) {
       const auth = AuthLocalStorageService.getAuthData();
-      authData.updateAuthData(auth);
+      contextData.updateAuthData(auth);
     }
   }
 
   const exitButtonClickHandler = async () => {
-    authData.updateAuthData(null);
+    contextData.updateAuthData(null);
     AuthLocalStorageService.removeAuthData();
-    await signout({ refreshToken: authData.refreshToken });
+    await signout({ refreshToken: contextData.refreshToken });
   };
 
   return (
@@ -41,8 +40,8 @@ const Header = () => {
         <img src={elephant} alt="logo" />
         <h1>Shop</h1>
         <IconsGroupDiv>
-          {!authData.accessToken && <AccountDialog />}
-          {authData.accessToken && (
+          {!contextData.accessToken && <AccountDialog />}
+          {contextData.accessToken && (
             <MotionButton
               onClick={exitButtonClickHandler}
               {...buttonAnimationSettings}
