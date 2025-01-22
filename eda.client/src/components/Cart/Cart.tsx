@@ -1,5 +1,6 @@
 import { useAppContext } from "../../AppProvider";
 import { CartItem } from "../../Data/CartItem";
+import { CartProductCard } from "./CartProductCard/CartProductCard";
 
 export const Cart = () => {
   const appContext = useAppContext();
@@ -9,11 +10,7 @@ export const Cart = () => {
     <div style={{ overflow: "auto", height: "400px" }}>
       {cartList.map((p) => (
         <div key={p.product.id}>
-          <b />
-          <p>{p.product.id}</p>
-          <p>{p.product.title}</p>
-          <p>{p.count}</p>
-          <b />
+          <CartProductCard cartItem={p} />
         </div>
       ))}
     </div>
