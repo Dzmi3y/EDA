@@ -10,8 +10,8 @@ export const Container = styled.div`
   color: var(--secondary-color);
   border-radius: 0;
   box-shadow: 2px 2px 10px 2px;
-  min-height: 400px;
-  min-width: 300px;
+  min-height: 500px;
+  min-width: 800px;
   padding: 1rem;
   font-family: Steppe;
 `;
