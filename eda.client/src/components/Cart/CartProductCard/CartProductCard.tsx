@@ -10,19 +10,16 @@ import {
   Title,
 } from "./styles";
 
-export const CartProductCard: React.FC<{ cartItem: CartItem }> = ({
-  cartItem,
-}) => {
+export const CartProductCard: React.FC<{
+  cartItem: CartItem;
+  addCount: () => {};
+  removeCount: () => {};
+  removeItem: () => {};
+}> = ({ cartItem, addCount, removeCount, removeItem }) => {
   const buttonAnimationSettings = {
     whileHover: { scale: 1.3 },
     whileTap: { scale: 0.95 },
   };
-
-  const addCount = () => {};
-
-  const removeCount = () => {};
-
-  const removeItem = () => {};
 
   return (
     <Container>
