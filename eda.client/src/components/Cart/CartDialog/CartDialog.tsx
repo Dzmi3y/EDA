@@ -1,5 +1,12 @@
 import { useEffect, useRef } from "react";
-import { CloseButton, Container, Dialog, Header, IconButton } from "./styles";
+import {
+  CloseButton,
+  Container,
+  Dialog,
+  Header,
+  IconButton,
+  Title,
+} from "./styles";
 import cartImage from "../../../assets/images/cart.svg";
 import { Cart } from "../Cart";
 
@@ -49,6 +56,7 @@ const CartDialog = () => {
         <Container ref={dialogContentRef}>
           <form method="dialog">
             <Header>
+              <Title>Cart</Title>
               <CloseButton {...buttonAnimationSettings} type="submit">
                 &#x2715;
               </CloseButton>

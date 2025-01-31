@@ -1,5 +1,13 @@
 import { useAppContext } from "../../AppProvider";
+import { Title } from "./CartDialog/styles";
 import { CartProductCard } from "./CartProductCard/CartProductCard";
+import {
+  CartListContainer,
+  Container,
+  ControlsContainer,
+  Message,
+  StyledButton,
+} from "./styles";
 
 export const Cart = () => {
   const appContext = useAppContext();
@@ -31,18 +39,47 @@ export const Cart = () => {
     appContext.updateCart(newCart);
   };
 
+  const buttonAnimationSettings = {
+    whileHover: { scale: 1.1 },
+    whileTap: { scale: 0.95 },
+  };
+
+  const OrderButtonHandler = () => {
+    appContext.updateCart([]);
+  };
+
   return (
-    <div style={{ overflow: "auto", height: "400px" }}>
-      {cartList.map((p) => (
-        <div key={p.product.id}>
-          <CartProductCard
-            addCount={async () => addCount(p.product.id)}
-            removeCount={async () => removeCount(p.product.id)}
-            removeItem={async () => removeItem(p.product.id)}
-            cartItem={p}
-          />
-        </div>
-      ))}
-    </div>
+    <Container>
+      {appContext.cart.length == 0 && <Message>Cart is empty</Message>}
+      <CartListContainer>
+        {cartList.map((p) => (
+          <div key={p.product.id}>
+            <CartProductCard
+              addCount={async () => addCount(p.product.id)}
+              removeCount={async () => removeCount(p.product.id)}
+              removeItem={async () => removeItem(p.product.id)}
+              cartItem={p}
+            />
+          </div>
+        ))}
+      </CartListContainer>
+      {appContext.cart.length > 0 && (
+        <ControlsContainer>
+          <p>
+            Total price:{" "}
+            {appContext.cart.reduce((accumulator, cartItem) => {
+              return accumulator + cartItem.product.price * cartItem.count;
+            }, 0)}
+            $
+          </p>
+          <StyledButton
+            onClick={OrderButtonHandler}
+            {...buttonAnimationSettings}
+          >
+            Order
+          </StyledButton>
+        </ControlsContainer>
+      )}
+    </Container>
   );
 };
