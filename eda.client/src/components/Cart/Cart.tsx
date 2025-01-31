@@ -17,7 +17,7 @@ export const Cart = () => {
 
   const removeCount = (id: string) => {
     let newCart = appContext.cart.map((p) => {
-      let isAvailable = p.count - 1 >= 0;
+      let isAvailable = p.count - 1 >= 1;
       if (p.product.id === id && isAvailable) {
         p.count--;
       }

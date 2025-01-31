@@ -1,59 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  CloseButton,
-  Container,
-  Dialog,
-  Header,
-  IconButton,
-  SwitchButton,
-  Title,
-} from "./styles";
+import { useEffect, useRef } from "react";
+import { CloseButton, Container, Dialog, Header, IconButton } from "./styles";
 import cartImage from "../../../assets/images/cart.svg";
 import { Cart } from "../Cart";
-import { useAppContext } from "../../../AppProvider";
 
 const CartDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogContentRef = useRef<HTMLDivElement>(null);
-  const appContext = useAppContext();
-  //test
-  useEffect(() => {
-    appContext.updateCart([
-      {
-        count: 2,
-        product: {
-          id: "1",
-          title: "Product 1",
-          description: "",
-          count: 5,
-          imageUrl: "",
-          price: 1,
-        },
-      },
-      {
-        count: 3,
-        product: {
-          id: "2",
-          title: "Product 2",
-          description: "",
-          count: 5,
-          imageUrl: "",
-          price: 1,
-        },
-      },
-      {
-        count: 4,
-        product: {
-          id: "3",
-          title: "Product 3",
-          description: "",
-          count: 5,
-          imageUrl: "",
-          price: 1,
-        },
-      },
-    ]);
-  }, []);
 
   const closeDialogHandler: () => void = () => {
     dialogRef.current?.close();
