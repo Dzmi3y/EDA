@@ -18,12 +18,6 @@ namespace EDA.Gateway.Controllers
             _redis = redis;
         }
 
-        [HttpGet]
-        public IActionResult GetOrders()
-        {
-            return Ok();
-        }
-
         [HttpPost]
         public IActionResult CreateOrder([FromBody] List<BasketItemDTO> orderList)
         {
