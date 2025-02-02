@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EventHandlers\" />
+    <ProjectReference Include="..\EDA.Shared\EDA.Shared.csproj" />
   </ItemGroup>
 
 </Project>
