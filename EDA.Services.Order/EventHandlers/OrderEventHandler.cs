@@ -16,15 +16,15 @@ namespace EDA.Services.Order.EventHandlers
     {
         private readonly ILogger<OrderEventHandler> _logger;
         private readonly IKafkaProducer _producer;
-        private readonly AppDbContext _db;
+        private readonly IServiceProvider _serviceProvider;
 
         public OrderEventHandler(KafkaConsumerBaseConfig config,
-            ILogger<OrderEventHandler> logger, IKafkaProducer producer, AppDbContext db)
-            : base(config, Topics.SignUpRequest, logger)
+            ILogger<OrderEventHandler> logger, IKafkaProducer producer, IServiceProvider serviceProvider)
+            : base(config, Topics.OrderRequest, logger)
         {
             _logger = logger;
             _producer = producer;
-            _db = db;
+            _serviceProvider = serviceProvider;
         }
 
         protected override async Task HandleAsync(ConsumeResult<string, string> result)
@@ -60,8 +60,12 @@ namespace EDA.Services.Order.EventHandlers
                     Cart = cartItem
                 };
 
-                await _db.Orders.AddAsync(newOrder);
-                await _db.SaveChangesAsync();
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    await dbContext.Orders.AddAsync(newOrder);
+                    await dbContext.SaveChangesAsync();
+                }
 
 
                 _logger.LogInformation($"Order {orderId} created successfully");
@@ -82,7 +86,7 @@ namespace EDA.Services.Order.EventHandlers
             }
             finally
             {
-                await _producer.SendMessageAsync(Topics.SignUpResponse,
+                await _producer.SendMessageAsync(Topics.OrderResponse,
                     result.Message.Key, responseMessage.ToString());
             }
         }

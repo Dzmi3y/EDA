@@ -18,7 +18,9 @@ topicsPartitions=(
 	["TokenRefreshRequest"]=1 
 	["TokenRefreshResponse"]=1 
 	["DeleteAccountRequest"]=1 
-	["DeleteAccountResponse"]=1 )
+	["DeleteAccountResponse"]=1 
+	["OrderRequest"]=1 
+	["OrderResponse"]=1 )
 
 for topic in "${!topicsPartitions[@]}"; do 
 	kafka-topics.sh --create --topic "$topic" --partitions "${topicsPartitions[$topic]}" --replication-factor 1 --bootstrap-server localhost:9092 

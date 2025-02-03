@@ -42,7 +42,7 @@ namespace EDA.Gateway.Controllers
                     OrderId = key,
                     CartItemList = cartItems
                 };
-                return await GetResponse<string>(key, orderPageRequestMessage.ToString(), Topics.TokenRefreshRequest);
+                return await GetResponse<string>(key, orderPageRequestMessage.ToString(), Topics.OrderRequest);
             }
             catch (Exception ex)
             {

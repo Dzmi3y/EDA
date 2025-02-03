@@ -110,6 +110,7 @@ Topics[] topics = new Topics[]
     Topics.SignOutResponse,
     Topics.TokenRefreshResponse,
     Topics.DeleteAccountResponse,
+    Topics.OrderResponse,
 };
 
 builder.Services.AddHostedService(provider =>

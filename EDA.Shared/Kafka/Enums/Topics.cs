@@ -13,7 +13,9 @@
         TokenRefreshRequest,
         TokenRefreshResponse,
         DeleteAccountRequest,
-        DeleteAccountResponse
+        DeleteAccountResponse,
+        OrderRequest,
+        OrderResponse,
 
     }
 
