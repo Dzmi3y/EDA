@@ -1,5 +1,4 @@
 import { useAppContext } from "../../AppProvider";
-import { Title } from "./CartDialog/styles";
 import { CartProductCard } from "./CartProductCard/CartProductCard";
 import {
   CartListContainer,

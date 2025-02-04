@@ -14,10 +14,6 @@ const CartDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogContentRef = useRef<HTMLDivElement>(null);
 
-  const closeDialogHandler: () => void = () => {
-    dialogRef.current?.close();
-  };
-
   const handleClickOutside = (event: MouseEvent) => {
     if (
       dialogRef.current &&
