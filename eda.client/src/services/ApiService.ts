@@ -5,6 +5,7 @@ import { RegistrationPayload } from "../Data/payloads/RegistrationPayload";
 import { RegistrationRequestData } from "../Data/requests/RegistrationRequestData";
 import { ResponseBase } from "../Data/ResponseBase";
 import { SignOutRequestData } from "../Data/requests/SignOutRequestData";
+import { OrderRequestData } from "../Data/requests/OrderRequestData";
 
 const TIMEOUT: number = 8000;
 
@@ -25,8 +26,6 @@ export const getProducts = async (
 export const registration = async (
   requestData: RegistrationRequestData
 ): Promise<ResponseBase<RegistrationPayload>> => {
-  console.log(JSON.stringify(requestData));
-  console.log(requestData);
   const response = await fetch(`api/Accounts/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -44,9 +43,6 @@ export const registration = async (
 export const authorization = async (
   requestData: AuthorizationRequestData
 ): Promise<ResponseBase<AuthorizationPayload>> => {
-  console.log(JSON.stringify(requestData));
-  console.log(requestData);
-
   const response = await fetch(`api/Accounts/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -54,9 +50,6 @@ export const authorization = async (
     signal: AbortSignal.timeout(TIMEOUT),
   });
 
-  console.log(response);
-  console.log(response.status);
-  console.log(response.statusText);
   if (!response.ok && response.status !== 400) {
     throw new Error("Network response was not ok");
   }
@@ -67,17 +60,36 @@ export const authorization = async (
 export const signout = async (
   requestData: SignOutRequestData
 ): Promise<ResponseBase<string>> => {
-  console.log(JSON.stringify(requestData));
-  console.log(requestData);
-
   const response = await fetch(`api/Accounts/signout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestData),
     signal: AbortSignal.timeout(TIMEOUT),
   });
-  console.log(response);
   if (!response.ok && response.status !== 401) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const order = async (
+  requestData: OrderRequestData[]
+): Promise<ResponseBase<string>> => {
+  console.log(JSON.stringify(requestData));
+  console.log(requestData);
+
+  const response = await fetch(`api/orders`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestData),
+    signal: AbortSignal.timeout(TIMEOUT),
+  });
+
+  console.log(response);
+  console.log(response.status);
+  console.log(response.statusText);
+  if (!response.ok && response.status !== 400) {
     throw new Error("Network response was not ok");
   }
   const data = await response.json();

@@ -1,4 +1,6 @@
 import { useAppContext } from "../../AppProvider";
+import { OrderRequestData } from "../../Data/requests/OrderRequestData";
+import { order } from "../../services/ApiService";
 import { CartProductCard } from "./CartProductCard/CartProductCard";
 import {
   CartListContainer,
@@ -44,8 +46,26 @@ export const Cart = () => {
     whileTap: { scale: 0.95 },
   };
 
-  const OrderButtonHandler = () => {
-    appContext.updateCart([]);
+  const OrderButtonHandler = async () => {
+    try {
+      const requestData: OrderRequestData[] =
+        appContext.cart.map<OrderRequestData>((p) => {
+          let orderItem: OrderRequestData = {
+            id: p.product.id,
+            count: p.count,
+            price: p.product.price,
+          };
+          return orderItem;
+        });
+
+      const response = await order(requestData);
+      appContext.updateCart([]);
+
+      console.log(response.payload);
+      console.log(response.errorMessage);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
