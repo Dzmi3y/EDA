@@ -10,6 +10,7 @@ import {
 
 export const Cart = () => {
   const appContext = useAppContext();
+  const isUserLogged = !!appContext.accessToken;
   const cartList = appContext.cart;
   const addCount = (id: string) => {
     let newCart = appContext.cart.map((p) => {
@@ -71,12 +72,20 @@ export const Cart = () => {
             }, 0)}
             $
           </p>
-          <StyledButton
-            onClick={OrderButtonHandler}
-            {...buttonAnimationSettings}
-          >
-            Order
-          </StyledButton>
+          {isUserLogged && (
+            <StyledButton
+              onClick={OrderButtonHandler}
+              {...buttonAnimationSettings}
+            >
+              Order
+            </StyledButton>
+          )}
+          {!isUserLogged && (
+            <p>
+              Please log in <br />
+              to place an order
+            </p>
+          )}
         </ControlsContainer>
       )}
     </Container>
