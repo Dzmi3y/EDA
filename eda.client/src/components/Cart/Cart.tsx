@@ -58,7 +58,7 @@ export const Cart = () => {
           return orderItem;
         });
 
-      const response = await order(requestData);
+      const response = await order(requestData, appContext.accessToken);
       appContext.updateCart([]);
 
       console.log(response.payload);

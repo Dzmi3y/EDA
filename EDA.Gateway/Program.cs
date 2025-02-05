@@ -9,6 +9,7 @@ using EDA.Shared.Redis;
 using EDA.Shared.Redis.Interfaces;
 using EDA.Shared.Redis.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +18,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -122,11 +133,13 @@ builder.Services.AddHostedService(provider =>
 });
 
 
-builder.Services.AddCors(options => {
+builder.Services.AddCors(options =>
+{
     options.AddPolicy("AllowSpecificOrigin", builder => builder.WithOrigins("http://localhost:59473/")
-        .AllowAnyMethod() 
-        .AllowAnyHeader() 
-        .AllowCredentials()); });
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+});
 
 var app = builder.Build();
 
@@ -136,6 +149,7 @@ if (app.Environment.IsStaging() || app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
